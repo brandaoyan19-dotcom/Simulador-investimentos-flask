@@ -60,11 +60,18 @@
         </form>
 
         {% if resultado %}
-            <div class="resultado">
-                <h2>Resultado final</h2>
-                <p>R$ {{ resultado }}</p>
-            </div>
-        {% endif %}
+    {% if resultado.erro %}
+        <div class="erro">{{ resultado.erro }}</div>
+    {% else %}
+        <div class="resultado">
+            <p><strong>Total investido:</strong> R$ {{ resultado.investido }}</p>
+            <p><strong>Valor final:</strong> R$ {{ resultado.final }}</p>
+            <p><strong>Lucro:</strong> R$ {{ resultado.lucro }}</p>
+            <p><strong>Rendimento:</strong> {{ resultado.percentual }}%</p>
+            <p><em>{{ resultado.avaliacao }}</em></p>
+        </div>
+    {% endif %}
+{% endif %}
 
         {% if erro %}
             <div class="erro">{{ erro }}</div>
