@@ -1,68 +1,76 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Simulador de Investimentos</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <title>Simulador de Investimentos</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+        function atualizarCampos() {
+            const tipo = document.getElementById("tipo").value;
+
+            document.getElementById("campo-ipca").style.display = "none";
+            document.getElementById("campo-cdi").style.display = "none";
+
+            if (tipo === "ipca") {
+                document.getElementById("campo-ipca").style.display = "block";
+            }
+
+            if (tipo === "cdb") {
+                document.getElementById("campo-cdi").style.display = "block";
+            }
+        }
+    </script>
 </head>
 
-<body>
-  <div class="container">
+<body onload="atualizarCampos()">
+    <div class="container">
+        <h1>Simulador de Investimentos</h1>
+        <p class="sub">Visual premium • Educativo • Simples</p>
 
-    <h1>Simulador de Investimentos</h1>
-    <p class="subtitle">Visual premium • Educativo • Simples</p>
+        <form method="POST">
+            <label>Tipo de investimento</label>
+            <select name="tipo" id="tipo" onchange="atualizarCampos()" required>
+                <option value="selic">Tesouro Selic</option>
+                <option value="cdb">CDB</option>
+                <option value="ipca">IPCA+</option>
+            </select>
 
-    <form method="post">
+            <label>Valor inicial (R$)</label>
+            <input type="number" name="valor_inicial" step="0.01" required>
 
-      <label>Tipo de investimento</label>
-      <select name="investimento" required>
-        <option value="selic">Tesouro Selic</option>
-        <option value="ipca">Tesouro IPCA+</option>
-        <option value="cdb">CDB</option>
-      </select>
+            <label>Aporte mensal (R$)</label>
+            <input type="number" name="aporte" step="0.01" required>
 
-      <label>Valor inicial (R$)</label>
-      <input type="number" name="valor_inicial" required>
+            <label>Período (anos)</label>
+            <input type="number" name="anos" required>
 
-      <label>Aporte mensal (R$)</label>
-      <input type="number" name="aporte_mensal" required>
+            <!-- IPCA -->
+            <div id="campo-ipca" style="display:none;">
+                <label>IPCA + (% ao ano)</label>
+                <input type="number" name="ipca_extra" step="0.01">
+            </div>
 
-      <label>Período (anos)</label>
-      <input type="number" name="anos" required>
+            <!-- CDI -->
+            <div id="campo-cdi" style="display:none;">
+                <label>Percentual do CDI (%)</label>
+                <input type="number" name="cdi_percentual" step="0.01">
+            </div>
 
-      <label>
-        IPCA + (% ao ano)
-        <small style="color:#9ca3af;">Ex: 5 significa IPCA + 5%</small>
-      </label>
-      <input type="number" name="adicional_ipca" step="0.01">
+            <button type="submit">Simular investimento</button>
+        </form>
 
-      <label>
-        Percentual do CDI (%)
-        <small style="color:#9ca3af;">Ex: 110 significa 110% do CDI</small>
-      </label>
-      <input type="number" name="percentual_cdi" step="0.01">
+        {% if resultado %}
+            <div class="resultado">
+                <h2>Resultado final</h2>
+                <p>R$ {{ resultado }}</p>
+            </div>
+        {% endif %}
 
-      <button type="submit">Simular investimento</button>
-    </form>
+        {% if erro %}
+            <div class="erro">{{ erro }}</div>
+        {% endif %}
 
-    {% if resultado %}
-    <div class="card">
-      <h2>{{ resultado.nome }}</h2>
-
-      <p><strong>Valor investido:</strong> R$ {{ resultado.investido }}</p>
-      <p><strong>Valor final:</strong> R$ {{ resultado.montante }}</p>
-      <p><strong>Rendimento:</strong> R$ {{ resultado.rendimento }}</p>
-      <p><strong>Ganho percentual:</strong> {{ resultado.percentual }}%</p>
-
-      <div class="vale">{{ resultado.vale }}</div>
+        <p class="dica">💡 Investimentos com constância tendem a gerar melhores resultados no longo prazo.</p>
     </div>
-    {% endif %}
-
-    <p class="exemplo">
-      💡 Investimentos com constância tendem a gerar melhores resultados no longo prazo.
-    </p>
-
-  </div>
 </body>
 </html>
