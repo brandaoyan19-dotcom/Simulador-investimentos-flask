@@ -1,36 +1,46 @@
+/* RESET BÁSICO */
 * {
   box-sizing: border-box;
 }
 
+/* BODY – FUNDO PREMIUM */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: radial-gradient(circle at top, #0b1220, #020617);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background:
+    radial-gradient(circle at 20% 20%, #1e293b, transparent 40%),
+    radial-gradient(circle at 80% 80%, #020617, #000);
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  color: #fff;
+  color: #ffffff;
 }
 
-/* Card principal */
+/* CONTAINER PRINCIPAL */
 .container {
   width: 100%;
   max-width: 420px;
-  background: #111827;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(180deg, #111827, #020617);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
 }
 
-/* Títulos */
+/* TÍTULO */
 h1 {
   text-align: center;
-  margin-bottom: 8px;
-  font-size: 1.8rem;
+  margin-bottom: 6px;
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
+/* SUBTÍTULO */
 .subtitle {
   text-align: center;
   color: #9ca3af;
@@ -38,86 +48,106 @@ h1 {
   font-size: 0.95rem;
 }
 
-/* Labels */
+/* LABELS */
 label {
   display: block;
   margin-top: 16px;
-  font-weight: bold;
+  margin-bottom: 6px;
+  font-weight: 600;
   font-size: 0.9rem;
 }
 
-/* Inputs */
+/* INPUTS E SELECT */
 input,
 select {
   width: 100%;
-  margin-top: 6px;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  font-size: 1rem;
-}
-
-/* Botão */
-button {
-  width: 100%;
-  margin-top: 24px;
   padding: 14px;
   border-radius: 12px;
   border: none;
-  background: linear-gradient(135deg, #16a34a, #22c55e);
-  color: #fff;
   font-size: 1rem;
-  font-weight: bold;
+  background: #020617;
+  color: #ffffff;
+  outline: none;
+}
+
+/* FOCO */
+input:focus,
+select:focus {
+  box-shadow: 0 0 0 2px #22c55e;
+}
+
+/* BOTÃO */
+button {
+  width: 100%;
+  margin-top: 28px;
+  padding: 16px;
+  border-radius: 14px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 button:hover {
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(34, 197, 94, 0.35);
 }
 
-/* Resultado */
+/* CARD DE RESULTADO */
 .card {
-  margin-top: 24px;
-  padding: 16px;
+  margin-top: 28px;
+  padding: 22px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #052e16, #022c22);
   border-left: 4px solid #22c55e;
-  background: #0f172a;
-  border-radius: 10px;
 }
 
+/* TEXTOS DO CARD */
 .card p {
   margin: 8px 0;
+  font-size: 0.95rem;
 }
 
-/* Valor destaque */
-.valor {
-  margin-top: 12px;
-  font-size: 1.4rem;
-  font-weight: bold;
+/* DESTAQUE FINAL */
+.value {
+  margin-top: 14px;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: #22c55e;
 }
 
-/* Texto exemplo */
+/* TEXTO EXPLICATIVO */
 .exemplo {
-  margin-top: 20px;
+  margin-top: 18px;
   font-size: 0.85rem;
   color: #9ca3af;
   text-align: center;
 }
 
-/* 📱 TELAS PEQUENAS */
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.6rem;
+/* RESPONSIVIDADE EXTRA */
+@media (max-height: 700px) {
+  body {
+    align-items: flex-start;
   }
 
   .container {
-    padding: 20px;
+    margin-top: 24px;
+  }
+}/* ANIMAÇÃO SUAVE */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* 💻 TELAS GRANDES */
-@media (min-width: 1024px) {
-  .container {
-    max-width: 480px;
-  }
+.card {
+  animation: fadeUp 0.6s ease-out;
 }
