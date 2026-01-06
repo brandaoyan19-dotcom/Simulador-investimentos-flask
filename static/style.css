@@ -1,55 +1,73 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #111827, #1f2933);
   margin: 0;
-  padding: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #0b1220, #020617);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  color: #fff;
 }
 
+/* Card principal */
 .container {
-  max-width: 460px;
-  margin: 50px auto;
-  background: #ffffff;
-  padding: 35px;
-  border-radius: 14px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 420px;
+  background: #111827;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
 
+/* Títulos */
 h1 {
   text-align: center;
-  color: #111827;
+  margin-bottom: 8px;
+  font-size: 1.8rem;
 }
 
 .subtitle {
   text-align: center;
-  color: #6b7280;
-  margin-bottom: 25px;
+  color: #9ca3af;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
 }
 
+/* Labels */
 label {
-  font-weight: bold;
-  margin-top: 15px;
   display: block;
+  margin-top: 16px;
+  font-weight: bold;
+  font-size: 0.9rem;
 }
 
-input, select {
+/* Inputs */
+input,
+select {
   width: 100%;
-  padding: 14px;
   margin-top: 6px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  font-size: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
 }
 
+/* Botão */
 button {
   width: 100%;
-  margin-top: 25px;
+  margin-top: 24px;
   padding: 14px;
-  background: linear-gradient(90deg, #16a34a, #22c55e);
+  border-radius: 12px;
   border: none;
-  color: white;
-  font-size: 16px;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: #fff;
+  font-size: 1rem;
   font-weight: bold;
-  border-radius: 10px;
   cursor: pointer;
 }
 
@@ -57,37 +75,49 @@ button:hover {
   opacity: 0.9;
 }
 
-.explicacao {
-  background: #f0fdf4;
-  border-left: 4px solid #16a34a;
-  padding: 12px;
-  margin: 15px 0;
-  font-size: 14px;
-  color: #065f46;
-}
-
+/* Resultado */
 .card {
-  margin-top: 30px;
-  padding: 25px;
-  background: #f9fafb;
-  border-radius: 12px;
-  border-left: 6px solid #16a34a;
+  margin-top: 24px;
+  padding: 16px;
+  border-left: 4px solid #22c55e;
+  background: #0f172a;
+  border-radius: 10px;
 }
 
-.card h2 {
-  margin-top: 0;
+.card p {
+  margin: 8px 0;
 }
 
-.vale {
-  margin-top: 15px;
-  font-size: 20px;
+/* Valor destaque */
+.valor {
+  margin-top: 12px;
+  font-size: 1.4rem;
   font-weight: bold;
-  color: #16a34a;
+  color: #22c55e;
 }
 
+/* Texto exemplo */
 .exemplo {
   margin-top: 20px;
-  font-size: 14px;
-  color: #6b7280;
+  font-size: 0.85rem;
+  color: #9ca3af;
   text-align: center;
+}
+
+/* 📱 TELAS PEQUENAS */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  .container {
+    padding: 20px;
+  }
+}
+
+/* 💻 TELAS GRANDES */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 480px;
+  }
 }
