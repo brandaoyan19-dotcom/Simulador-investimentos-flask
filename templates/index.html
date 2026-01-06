@@ -3,84 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <title>Simulador de Investimentos</title>
-
-  <!-- RESPONSIVIDADE -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
-
   <div class="container">
-    <h1>Simulador de Investimentos</h1>
-    <p class="subtitle">
-      Simule Tesouro Direto e CDB de forma simples e educativa
-    </p>
 
-    <!-- FORMULÁRIO -->
-    <form method="POST">
+    <h1>Simulador de Investimentos</h1>
+    <p class="subtitle">Visual premium • Educativo • Simples</p>
+
+    <form method="post">
 
       <label>Tipo de investimento</label>
-      <select name="tipo" required>
-        <option value="">Selecione</option>
+      <select name="investimento" required>
         <option value="selic">Tesouro Selic</option>
         <option value="ipca">Tesouro IPCA+</option>
         <option value="cdb">CDB</option>
       </select>
 
       <label>Valor inicial (R$)</label>
-      <input type="number" name="valor_inicial" step="0.01" required>
+      <input type="number" name="valor_inicial" required>
 
       <label>Aporte mensal (R$)</label>
-      <input type="number" name="aporte" step="0.01" required>
+      <input type="number" name="aporte_mensal" required>
 
-      <label>Período (em anos)</label>
+      <label>Período (anos)</label>
       <input type="number" name="anos" required>
 
-      <!-- IPCA EXTRA -->
-      {% if mostrar_ipca_extra %}
       <label>
         IPCA + (% ao ano)
-        <small style="color:#9ca3af;">ex: 5 significa IPCA + 5%</small>
+        <small style="color:#9ca3af;">Ex: 5 significa IPCA + 5%</small>
       </label>
-      <input type="number" name="ipca_extra" step="0.01" required>
-      {% endif %}
+      <input type="number" name="adicional_ipca" step="0.01">
 
-      <!-- CDI EXTRA -->
-      {% if mostrar_cdi %}
       <label>
         Percentual do CDI (%)
-        <small style="color:#9ca3af;">ex: 110 significa 110% do CDI</small>
+        <small style="color:#9ca3af;">Ex: 110 significa 110% do CDI</small>
       </label>
-      <input type="number" name="cdi_percentual" step="0.01" required>
-      {% endif %}
+      <input type="number" name="percentual_cdi" step="0.01">
 
       <button type="submit">Simular investimento</button>
     </form>
 
-    <!-- RESULTADO -->
     {% if resultado %}
     <div class="card">
+      <h2>{{ resultado.nome }}</h2>
 
-      <p><strong>Total investido:</strong> R$ {{ resultado.total_investido }}</p>
+      <p><strong>Valor investido:</strong> R$ {{ resultado.investido }}</p>
+      <p><strong>Valor final:</strong> R$ {{ resultado.montante }}</p>
+      <p><strong>Rendimento:</strong> R$ {{ resultado.rendimento }}</p>
+      <p><strong>Ganho percentual:</strong> {{ resultado.percentual }}%</p>
 
-      <p><strong>Valor final:</strong> R$ {{ resultado.total_final }}</p>
-
-      <p><strong>Rendimento:</strong> {{ resultado.percentual }}%</p>
-
-      <p class="value">
-        {{ resultado.decisao }}
-      </p>
-
-      <p class="exemplo">
-        {{ resultado.exemplo }}
-      </p>
-
+      <div class="vale">{{ resultado.vale }}</div>
     </div>
     {% endif %}
 
-  </div>
+    <p class="exemplo">
+      💡 Investimentos com constância tendem a gerar melhores resultados no longo prazo.
+    </p>
 
+  </div>
 </body>
 </html>
