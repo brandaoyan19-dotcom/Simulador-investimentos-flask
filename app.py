@@ -2,60 +2,52 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Taxas anuais aproximadas (educacionais)
-SELIC = 0.1065   # 10,65% a.a.
-CDI = 0.1065
-IPCA = 0.045     # 4,5% a.a.
-
 @app.route("/", methods=["GET", "POST"])
 def index():
     resultado = None
 
     if request.method == "POST":
-        try:
-            valor_inicial = float(request.form["valor_inicial"])
-            aporte_mensal = float(request.form["aporte_mensal"])
-            anos = int(request.form["anos"])
-            tipo = request.form["tipo"]
+        valor_inicial = float(request.form["valor_inicial"])
+        aporte_mensal = float(request.form["aporte_mensal"])
+        anos = int(request.form["anos"])
+        tipo = request.form["tipo"]
 
-            total_investido = valor_inicial + aporte_mensal * 12 * anos
+        # Taxas médias educacionais
+        if tipo == "selic":
+            taxa_anual = 0.105
+            descricao = "A Selic é a taxa básica da economia. Indicada para segurança."
+        elif tipo == "cdi":
+            percentual_cdi = float(request.form["percentual_cdi"]) / 100
+            taxa_anual = 0.105 * percentual_cdi
+            descricao = "O CDI acompanha a Selic e é comum em CDBs."
+        elif tipo == "ipca":
+            adicional_ipca = float(request.form["ipca_adicional"]) / 100
+            taxa_anual = 0.04 + adicional_ipca
+            descricao = "O IPCA protege contra a inflação no longo prazo."
+        else:
+            taxa_anual = 0
+            descricao = ""
 
-            if tipo == "selic":
-                taxa = SELIC
-                explicacao = "O Tesouro Selic acompanha a taxa básica de juros da economia."
+        taxa_mensal = taxa_anual / 12
+        meses = anos * 12
 
-            elif tipo == "ipca":
-                ipca_extra = float(request.form["ipca_extra"]) / 100
-                taxa = IPCA + ipca_extra
-                explicacao = "O Tesouro IPCA+ protege seu dinheiro da inflação e ainda paga um ganho real."
+        montante = valor_inicial
+        total_investido = valor_inicial + aporte_mensal * meses
 
-            elif tipo == "cdb":
-                cdi_percentual = float(request.form["cdb_percentual"]) / 100
-                taxa = CDI * cdi_percentual
-                explicacao = "CDBs costumam render um percentual do CDI, que anda próximo da Selic."
+        for _ in range(meses):
+            montante = montante * (1 + taxa_mensal) + aporte_mensal
 
-            montante = valor_inicial
+        lucro = montante - total_investido
+        rendimento_percentual = (lucro / total_investido) * 100
 
-            for _ in range(anos * 12):
-                montante *= (1 + taxa / 12)
-                montante += aporte_mensal
-
-            lucro = montante - total_investido
-            percentual = (lucro / total_investido) * 100
-
-            avaliacao = "Vale a pena ✅" if percentual > 5 else "Pode não valer a pena ❌"
-
-            resultado = {
-                "investido": f"{total_investido:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."),
-                "final": f"{montante:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."),
-                "lucro": f"{lucro:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."),
-                "percentual": f"{percentual:.2f}",
-                "avaliacao": avaliacao,
-                "explicacao": explicacao
-            }
-
-        except Exception as e:
-            resultado = {"erro": str(e)}
+        resultado = {
+            "total_investido": round(total_investido, 2),
+            "valor_final": round(montante, 2),
+            "lucro": round(lucro, 2),
+            "rendimento": round(rendimento_percentual, 2),
+            "descricao": descricao,
+            "vale_a_pena": rendimento_percentual > 100
+        }
 
     return render_template("index.html", resultado=resultado)
 

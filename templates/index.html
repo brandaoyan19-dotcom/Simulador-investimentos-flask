@@ -2,108 +2,73 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Simulador de Investimentos</title>
+    <title>Simulador Educacional de Investimentos</title>
     <link rel="stylesheet" href="/static/style.css">
-    <script>
-        function atualizarCampos() {
-            const tipo = document.getElementById("tipo").value;
+</head>
+<body>
 
-            document.getElementById("campo-ipca").style.display = "none";
-            document.getElementById("campo-cdi").style.display = "none";
+<div class="container">
+    <h1>Simulador Educacional de Investimentos</h1>
+    <p class="subtitulo">Aprenda como o tempo e os aportes fazem seu dinheiro crescer</p>
 
-            if (tipo === "ipca") {
-                document.getElementById("campo-ipca").style.display = "block";
-            }
+    <form method="POST">
+        <label>Valor inicial (R$)</label>
+        <input type="number" step="0.01" name="valor_inicial" required>
 
-            if (tipo === "cdb") {
-                document.getElementById("campo-cdi").style.display = "block";
-            }
-        }
-    </script>
-    <body>
+        <label>Aporte mensal (R$)</label>
+        <input type="number" step="0.01" name="aporte_mensal" required>
 
-<div class="app">
+        <label>Período (anos)</label>
+        <input type="number" name="anos" required>
 
-    <!-- FORMULÁRIO -->
-    <div class="card">
-        <h1>Simulador de Investimentos</h1>
-        <p class="sub">Aprenda, simule e compare investimentos</p>
+        <label>Tipo de investimento</label>
+        <select name="tipo" required onchange="mostrarCampos(this.value)">
+            <option value="">Selecione</option>
+            <option value="selic">Tesouro Selic</option>
+            <option value="cdi">CDB (CDI)</option>
+            <option value="ipca">IPCA+</option>
+        </select>
 
-        <form method="POST">
-
-            <label>Valor inicial (R$)</label>
-            <input type="number" name="valor_inicial" required>
-
-            <label>Aporte mensal (R$)</label>
-            <input type="number" name="aporte_mensal" required>
-
-            <label>Período (anos)</label>
-            <input type="number" name="anos" required>
-
-            <label>Tipo de investimento</label>
-            <select name="tipo" required>
-                <option value="">Selecione</option>
-                <option value="selic">Tesouro Selic</option>
-                <option value="ipca">Tesouro IPCA+</option>
-                <option value="cdb">CDB</option>
-            </select>
-
-            <!-- IPCA+ -->
-            <div id="ipcaExtra" style="display:none;">
-                <label>Adicional do IPCA+ (% ao ano)</label>
-                <input type="number" step="0.01" name="ipca_extra">
-                <small class="educativo">
-                    Exemplo: IPCA + 5% significa inflação + 5% ao ano
-                </small>
-            </div>
-
-            <!-- CDB -->
-            <div id="cdbExtra" style="display:none;">
-                <label>Percentual do CDI (%)</label>
-                <input type="number" step="1" name="cdb_percentual">
-                <small class="educativo">
-                    Exemplo: 110% do CDI costuma render mais que a poupança
-                </small>
-            </div>
-
-            <button type="submit">Simular</button>
-        </form>
-    </div>
-
-    <!-- RESULTADO -->
-    {% if resultado and not resultado.erro %}
-    <div class="card">
-        <h2>Resultado da simulação</h2>
-
-        <div class="resultado">
-            <p><strong>Total investido:</strong> R$ {{ resultado.investido }}</p>
-            <p><strong>Valor final:</strong> R$ {{ resultado.final }}</p>
-            <p><strong>Lucro:</strong> R$ {{ resultado.lucro }}</p>
-            <p><strong>Rendimento:</strong> {{ resultado.percentual }}%</p>
-
-            <p><strong>{{ resultado.avaliacao }}</strong></p>
-
-            <div class="educativo">
-                <p>
-                    Quanto maior o tempo investido, maior o impacto dos juros compostos.
-                    A constância costuma ser mais importante do que tentar “acertar o melhor momento”.
-                </p>
-            </div>
+        <div id="campo-cdi" class="campo-extra">
+            <label>% do CDI (ex: 110)</label>
+            <input type="number" name="percentual_cdi">
         </div>
+
+        <div id="campo-ipca" class="campo-extra">
+            <label>IPCA + (% ao ano)</label>
+            <input type="number" step="0.01" name="ipca_adicional">
+        </div>
+
+        <button type="submit">Simular investimento</button>
+    </form>
+
+    {% if resultado %}
+    <div class="resultado">
+        <h2>Resultado da simulação</h2>
+        <p><strong>Total investido:</strong> R$ {{ resultado.total_investido }}</p>
+        <p><strong>Valor final:</strong> R$ {{ resultado.valor_final }}</p>
+        <p><strong>Lucro:</strong> R$ {{ resultado.lucro }}</p>
+        <p><strong>Rendimento:</strong> {{ resultado.rendimento }}%</p>
+
+        <p class="educativo">{{ resultado.descricao }}</p>
+
+        <p class="vale">
+            Vale a pena?
+            {% if resultado.vale_a_pena %}
+            ✅ Sim, principalmente no longo prazo
+            {% else %}
+            ⚠️ O tempo é essencial para melhorar o resultado
+            {% endif %}
+        </p>
     </div>
     {% endif %}
-
 </div>
 
 <script>
-const tipo = document.querySelector('select[name="tipo"]');
-const ipca = document.getElementById('ipcaExtra');
-const cdb = document.getElementById('cdbExtra');
-
-tipo.addEventListener('change', () => {
-    ipca.style.display = tipo.value === 'ipca' ? 'block' : 'none';
-    cdb.style.display = tipo.value === 'cdb' ? 'block' : 'none';
-});
+function mostrarCampos(tipo) {
+    document.getElementById("campo-cdi").style.display = tipo === "cdi" ? "block" : "none";
+    document.getElementById("campo-ipca").style.display = tipo === "ipca" ? "block" : "none";
+}
 </script>
 
 </body>

@@ -1,86 +1,86 @@
 * {
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, sans-serif;
 }
 
 body {
     margin: 0;
-    background: linear-gradient(135deg, #4b0082, #000);
     min-height: 100vh;
+    background: linear-gradient(135deg, #2a004f, #000);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.app {
+.container {
     width: 100%;
-    max-width: 1000px;
-    padding: 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.card {
-    background: #fff;
+    max-width: 420px;
+    background: #121212;
+    padding: 24px;
     border-radius: 16px;
-    padding: 25px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    color: #fff;
 }
 
-h1, h2 {
-    margin-top: 0;
-    color: #4b0082;
+h1 {
+    text-align: center;
+    margin-bottom: 6px;
 }
 
-.sub {
-    color: #555;
+.subtitulo {
+    text-align: center;
+    font-size: 14px;
+    color: #bbb;
     margin-bottom: 20px;
 }
 
 label {
-    display: block;
+    font-size: 14px;
     margin-top: 12px;
-    font-weight: bold;
+    display: block;
 }
 
 input, select {
     width: 100%;
     padding: 10px;
-    margin-top: 5px;
     border-radius: 8px;
-    border: 1px solid #ccc;
+    border: none;
+    margin-top: 4px;
 }
 
 button {
-    width: 100%;
     margin-top: 20px;
+    width: 100%;
     padding: 12px;
-    border: none;
     border-radius: 10px;
-    background: #4b0082;
+    border: none;
+    background: #6a00ff;
     color: #fff;
     font-size: 16px;
     cursor: pointer;
 }
 
 button:hover {
-    background: #36005f;
+    opacity: 0.9;
+}
+
+.resultado {
+    margin-top: 24px;
+    padding: 16px;
+    background: #1e1e1e;
+    border-radius: 12px;
 }
 
 .educativo {
-    margin-top: 10px;
     font-size: 14px;
-    color: #555;
+    color: #ccc;
+    margin-top: 10px;
 }
 
-.resultado p {
-    margin: 6px 0;
+.vale {
+    margin-top: 12px;
+    font-weight: bold;
 }
 
-/* RESPONSIVO */
-@media (max-width: 800px) {
-    .app {
-        grid-template-columns: 1fr;
-    }
+.campo-extra {
+    display: none;
 }
