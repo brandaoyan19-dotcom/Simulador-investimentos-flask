@@ -2,61 +2,62 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
+# Taxas anuais aproximadas (educacionais)
+SELIC = 0.1065   # 10,65% a.a.
+CDI = 0.1065
+IPCA = 0.045     # 4,5% a.a.
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     resultado = None
 
     if request.method == "POST":
         try:
-            tipo = request.form.get("tipo")
-            valor_inicial = float(request.form.get("valor_inicial"))
-            aporte = float(request.form.get("aporte"))
-            anos = int(request.form.get("anos"))
+            valor_inicial = float(request.form["valor_inicial"])
+            aporte_mensal = float(request.form["aporte_mensal"])
+            anos = int(request.form["anos"])
+            tipo = request.form["tipo"]
 
-            selic = 0.10
-            ipca_base = 0.04
+            total_investido = valor_inicial + aporte_mensal * 12 * anos
 
             if tipo == "selic":
-                taxa = selic
-
-            elif tipo == "cdb":
-                cdi_percentual = float(request.form.get("cdi_percentual")) / 100
-                taxa = selic * cdi_percentual
+                taxa = SELIC
+                explicacao = "O Tesouro Selic acompanha a taxa básica de juros da economia."
 
             elif tipo == "ipca":
-                ipca_extra = float(request.form.get("ipca_extra")) / 100
-                taxa = ipca_base + ipca_extra
+                ipca_extra = float(request.form["ipca_extra"]) / 100
+                taxa = IPCA + ipca_extra
+                explicacao = "O Tesouro IPCA+ protege seu dinheiro da inflação e ainda paga um ganho real."
 
-            meses = anos * 12
+            elif tipo == "cdb":
+                cdi_percentual = float(request.form["cdb_percentual"]) / 100
+                taxa = CDI * cdi_percentual
+                explicacao = "CDBs costumam render um percentual do CDI, que anda próximo da Selic."
+
             montante = valor_inicial
 
-            for _ in range(meses):
-                montante = montante * (1 + taxa / 12) + aporte
+            for _ in range(anos * 12):
+                montante *= (1 + taxa / 12)
+                montante += aporte_mensal
 
-            total_investido = valor_inicial + aporte * meses
             lucro = montante - total_investido
-            rendimento_pct = (lucro / total_investido) * 100
+            percentual = (lucro / total_investido) * 100
 
-            if rendimento_pct > 50:
-                avaliacao = "Excelente resultado para o longo prazo 📈"
-            elif rendimento_pct > 20:
-                avaliacao = "Bom rendimento, consistente 👍"
-            else:
-                avaliacao = "Rendimento baixo, vale comparar opções ⚠️"
+            avaliacao = "Vale a pena ✅" if percentual > 5 else "Pode não valer a pena ❌"
 
             resultado = {
-                "final": round(montante, 2),
-                "investido": round(total_investido, 2),
-                "lucro": round(lucro, 2),
-                "percentual": round(rendimento_pct, 2),
-                "avaliacao": avaliacao
+                "investido": f"{total_investido:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."),
+                "final": f"{montante:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."),
+                "lucro": f"{lucro:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."),
+                "percentual": f"{percentual:.2f}",
+                "avaliacao": avaliacao,
+                "explicacao": explicacao
             }
 
-        except:
-            resultado = {"erro": "Preencha os campos corretamente."}
+        except Exception as e:
+            resultado = {"erro": str(e)}
 
     return render_template("index.html", resultado=resultado)
-
 
 if __name__ == "__main__":
     app.run(debug=True)
