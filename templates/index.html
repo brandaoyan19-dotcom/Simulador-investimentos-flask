@@ -1,58 +1,92 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Simulador de Investimentos</title>
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <title>Simulador de Investimentos</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
 
-<div class="container">
+<body>
+  <div class="container">
     <h1>Simulador de Investimentos</h1>
-    <p class="subtitle">Visual profissional • Simples • Educativo</p>
+    <p class="subtitle">Visual premium • Educativo • Simples</p>
 
     <form method="post">
-        <label>Tipo de investimento</label>
-        <select name="tipo" required>
-            <option value="selic">Tesouro Selic</option>
-            <option value="cdi">CDB (CDI)</option>
-            <option value="ipca">Tesouro IPCA+</option>
-        </select>
+      <label>Tipo de investimento</label>
+      <select name="tipo" id="tipo" onchange="atualizarCampos()" required>
+        <option value="selic">Tesouro Selic</option>
+        <option value="cdi">CDB atrelado ao CDI</option>
+        <option value="ipca">Tesouro IPCA+</option>
+      </select>
 
-        <label>Valor inicial (R$)</label>
-        <input type="number" name="capital" required>
+      <div id="explicacao" class="explicacao">
+        Tesouro Selic acompanha a taxa básica da economia e é indicado para reserva de emergência.
+      </div>
 
-        <label>Aporte mensal (R$)</label>
-        <input type="number" name="aporte" required>
+      <label>Valor inicial (R$)</label>
+      <input type="number" name="capital" required>
 
-        <label>Período (anos)</label>
-        <input type="number" name="anos" required>
+      <label>Aporte mensal (R$)</label>
+      <input type="number" name="aporte" required>
 
-        <label>% do CDI (se escolher CDB)</label>
+      <label>Período (anos)</label>
+      <input type="number" name="anos" required>
+
+      <div id="campo_cdi" style="display:none;">
+        <label>% do CDI</label>
         <input type="number" name="perc_cdi" placeholder="Ex: 110">
+      </div>
 
-        <label>IPCA + adicional (se escolher IPCA+)</label>
+      <div id="campo_ipca" style="display:none;">
+        <label>IPCA adicional (%)</label>
         <input type="number" name="ipca_extra" placeholder="Ex: 5">
+      </div>
 
-        <button type="submit">Simular</button>
+      <button type="submit">Simular investimento</button>
     </form>
 
     {% if resultado %}
     <div class="card">
-        <h2>{{ resultado.nome }}</h2>
-        <p><strong>Investido:</strong> R$ {{ resultado.investido }}</p>
-        <p><strong>Valor final:</strong> R$ {{ resultado.montante }}</p>
-        <p><strong>Rendimento:</strong> R$ {{ resultado.rendimento }}</p>
-        <p><strong>Ganho percentual:</strong> {{ resultado.percentual }}%</p>
+      <h2>{{ resultado.nome }}</h2>
+      <p><strong>Total investido:</strong> R$ {{ resultado.investido }}</p>
+      <p><strong>Valor final:</strong> R$ {{ resultado.montante }}</p>
+      <p><strong>Rendimento:</strong> R$ {{ resultado.rendimento }}</p>
+      <p><strong>Ganho percentual:</strong> {{ resultado.percentual }}%</p>
 
-        <div class="vale">{{ resultado.vale }}</div>
-
-        <p class="exemplo">
-            Exemplo: investir com constância tende a aumentar o patrimônio ao longo do tempo.
-        </p>
+      <div class="vale">{{ resultado.vale }}</div>
     </div>
     {% endif %}
-</div>
 
+    <p class="exemplo">
+      💡 Investimentos com constância tendem a gerar melhores resultados no longo prazo.
+    </p>
+  </div>
+
+  <script>
+    function atualizarCampos() {
+      const tipo = document.getElementById("tipo").value;
+      const campoCDI = document.getElementById("campo_cdi");
+      const campoIPCA = document.getElementById("campo_ipca");
+      const explicacao = document.getElementById("explicacao");
+
+      campoCDI.style.display = "none";
+      campoIPCA.style.display = "none";
+
+      if (tipo === "selic") {
+        explicacao.innerText =
+          "Tesouro Selic acompanha a taxa básica da economia. Ideal para reserva de emergência.";
+
+      } else if (tipo === "cdi") {
+        campoCDI.style.display = "block";
+        explicacao.innerText =
+          "CDBs atrelados ao CDI rendem uma porcentagem do CDI. Percentuais acima de 100% são mais atrativos.";
+
+      } else if (tipo === "ipca") {
+        campoIPCA.style.display = "block";
+        explicacao.innerText =
+          "Tesouro IPCA+ protege seu poder de compra e garante rendimento acima da inflação.";
+      }
+    }
+  </script>
 </body>
 </html>

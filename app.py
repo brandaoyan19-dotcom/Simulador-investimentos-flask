@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request
-import math
 
 app = Flask(__name__)
 
@@ -13,7 +12,7 @@ def index():
         aporte = float(request.form.get("aporte"))
         anos = int(request.form.get("anos"))
 
-        selic = 0.105   # 10,5% ao ano (exemplo educativo)
+        selic = 0.105
         cdi = 0.10
         ipca = 0.045
 
@@ -35,7 +34,7 @@ def index():
         montante = capital
 
         for _ in range(meses):
-            montante = montante * (1 + taxa/12) + aporte
+            montante = montante * (1 + taxa / 12) + aporte
 
         investido = capital + aporte * meses
         rendimento = montante - investido
