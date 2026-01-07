@@ -5,51 +5,51 @@ app = Flask(__name__)
 @app.route("/", methods=["GET", "POST"])
 def index():
     resultado = None
+    explicacao = None
 
     if request.method == "POST":
-        valor_inicial = float(request.form["valor_inicial"])
-        aporte_mensal = float(request.form["aporte_mensal"])
-        anos = int(request.form["anos"])
-        tipo = request.form["tipo"]
+        tipo = request.form.get("tipo")
+        valor = float(request.form.get("valor", 0))
+        tempo = int(request.form.get("tempo", 0))
 
-        # Taxas médias educacionais
-        if tipo == "selic":
-            taxa_anual = 0.105
-            descricao = "A Selic é a taxa básica da economia. Indicada para segurança."
-        elif tipo == "cdi":
-            percentual_cdi = float(request.form["percentual_cdi"]) / 100
-            taxa_anual = 0.105 * percentual_cdi
-            descricao = "O CDI acompanha a Selic e é comum em CDBs."
+        # CDB
+        if tipo == "cdb":
+            percentual_cdi = float(request.form.get("percentual_cdi", 0))
+            cdi_ano = 13.65 / 100  # CDI médio
+            taxa = (percentual_cdi / 100) * cdi_ano
+            montante = valor * ((1 + taxa) ** tempo)
+            rendimento = montante - valor
+
+            resultado = f"Valor final: R$ {montante:,.2f}"
+            explicacao = (
+                f"Você investiu R$ {valor:,.2f} em um CDB por {tempo} anos. "
+                f"Com {percentual_cdi}% do CDI, seu rendimento foi de "
+                f"R$ {rendimento:,.2f}. "
+                "CDB costuma ser uma opção segura, principalmente quando "
+                "tem cobertura do FGC."
+            )
+
+        # IPCA+
         elif tipo == "ipca":
-            adicional_ipca = float(request.form["ipca_adicional"]) / 100
-            taxa_anual = 0.04 + adicional_ipca
-            descricao = "O IPCA protege contra a inflação no longo prazo."
-        else:
-            taxa_anual = 0
-            descricao = ""
+            adicional = float(request.form.get("adicional", 0)) / 100
+            ipca_ano = 4 / 100  # IPCA médio
+            taxa = ipca_ano + adicional
+            montante = valor * ((1 + taxa) ** tempo)
+            rendimento = montante - valor
 
-        taxa_mensal = taxa_anual / 12
-        meses = anos * 12
+            resultado = f"Valor final: R$ {montante:,.2f}"
+            explicacao = (
+                f"Você investiu R$ {valor:,.2f} em um título IPCA+ por {tempo} anos. "
+                f"Além da inflação, você ganhou {adicional*100:.2f}% ao ano. "
+                f"O rendimento total foi de R$ {rendimento:,.2f}. "
+                "Esse tipo de investimento protege seu dinheiro da inflação."
+            )
 
-        montante = valor_inicial
-        total_investido = valor_inicial + aporte_mensal * meses
-
-        for _ in range(meses):
-            montante = montante * (1 + taxa_mensal) + aporte_mensal
-
-        lucro = montante - total_investido
-        rendimento_percentual = (lucro / total_investido) * 100
-
-        resultado = {
-            "total_investido": round(total_investido, 2),
-            "valor_final": round(montante, 2),
-            "lucro": round(lucro, 2),
-            "rendimento": round(rendimento_percentual, 2),
-            "descricao": descricao,
-            "vale_a_pena": rendimento_percentual > 100
-        }
-
-    return render_template("index.html", resultado=resultado)
+    return render_template(
+        "index.html",
+        resultado=resultado,
+        explicacao=explicacao
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
