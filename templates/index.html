@@ -1,93 +1,113 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Simulador Financeiro</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador Financeiro</title>
+
+  <!-- CSS será ajustado no Passo 3 -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
+  <main class="app">
 
-<div class="app">
-
-    <header>
-        <h1>Simulador Financeiro</h1>
-        <p>Entenda, simule e decida melhor</p>
+    <!-- CABEÇALHO -->
+    <header class="header">
+      <h1>Simulador Financeiro</h1>
+      <p>Simule investimentos de forma simples e consciente</p>
     </header>
 
-    <form method="post" class="card">
+    <!-- FORMULÁRIO -->
+    <form method="post" class="form">
 
-        <label>Valor inicial</label>
-        <input type="number" name="valor_inicial" required>
-        <small>Quanto você já tem para começar.</small>
+      <!-- ETAPA 1 — DADOS BÁSICOS -->
+      <section class="step">
+        <h2>1️⃣ Dados iniciais</h2>
 
-        <label>Aporte mensal</label>
-        <input type="number" name="aporte" required>
-        <small>Quanto pretende investir todo mês.</small>
+        <label>
+          Valor inicial
+          <input type="number" name="valor_inicial" placeholder="Ex: 1000" required>
+          <small>Quanto você já tem para começar.</small>
+        </label>
 
-        <label>Prazo (anos)</label>
-        <input type="number" name="anos" required>
-        <small>Por quanto tempo você pretende investir.</small>
+        <label>
+          Aporte mensal
+          <input type="number" name="aporte" placeholder="Ex: 200" required>
+          <small>Quanto pretende investir todo mês.</small>
+        </label>
 
-        <label>Tipo de investimento</label>
-        <select name="tipo" id="tipo" required>
+        <label>
+          Prazo (anos)
+          <input type="number" name="anos" placeholder="Ex: 5" required>
+          <small>Por quanto tempo pretende investir.</small>
+        </label>
+      </section>
+
+      <!-- ETAPA 2 — TIPO DE INVESTIMENTO -->
+      <section class="step">
+        <h2>2️⃣ Tipo de investimento</h2>
+
+        <label>
+          Escolha uma opção
+          <select name="tipo" id="tipo-investimento" required>
             <option value="">Selecione</option>
             <option value="selic">Tesouro Selic</option>
             <option value="ipca">Tesouro IPCA+</option>
             <option value="cdb">CDB</option>
-        </select>
+          </select>
+          <small>O tipo define como o dinheiro rende ao longo do tempo.</small>
+        </label>
+      </section>
 
-        <div id="ipcaExtra" class="hidden">
-            <label>Adicional acima do IPCA (%)</label>
-            <input type="number" step="0.1" name="ipca_extra">
-            <small>Ganho real acima da inflação.</small>
-        </div>
+      <!-- ETAPA 3 — CAMPOS CONDICIONAIS -->
+      <!-- OBS: ficam INVISÍVEIS por padrão -->
+      <section class="step hidden" id="campo-ipca">
+        <h2>3️⃣ Detalhe do IPCA+</h2>
 
-        <div id="cdiExtra" class="hidden">
-            <label>Percentual do CDI (%)</label>
-            <input type="number" step="1" name="cdi">
-            <small>Quanto do CDI o banco paga.</small>
-        </div>
+        <label>
+          Adicional acima do IPCA (%)
+          <input type="number" step="0.1" name="ipca_extra" placeholder="Ex: 5">
+          <small>Ganho real acima da inflação oficial (IPCA).</small>
+        </label>
+      </section>
 
+      <section class="step hidden" id="campo-cdb">
+        <h2>3️⃣ Detalhe do CDB</h2>
+
+        <label>
+          Percentual do CDI (%)
+          <input type="number" step="1" name="cdi" placeholder="Ex: 110">
+          <small>Quanto do CDI o banco paga.</small>
+        </label>
+      </section>
+
+      <!-- ETAPA 4 — AÇÃO -->
+      <section class="step">
         <button type="submit">Simular investimento</button>
+        <small>A simulação só acontece ao clicar no botão.</small>
+      </section>
+
     </form>
 
+    <!-- RESULTADO (renderizado pelo backend depois) -->
     {% if resultado %}
     <section class="resultado">
-        <h2>{{ resultado.vale }}</h2>
-        <p>{{ resultado.explicacao }}</p>
+      <h2>Resultado da simulação</h2>
 
-        <div class="grid">
-            <div>
-                <strong>Total investido</strong>
-                <span>R$ {{ resultado.total }}</span>
-            </div>
-            <div>
-                <strong>Valor final</strong>
-                <span>R$ {{ resultado.final }}</span>
-            </div>
-            <div>
-                <strong>Rendimento</strong>
-                <span>R$ {{ resultado.rendimento }} ({{ resultado.percentual }}%)</span>
-            </div>
-        </div>
+      <p><strong>{{ resultado.vale }}</strong></p>
+      <p>{{ resultado.explicacao }}</p>
+
+      <ul>
+        <li>Total investido: R$ {{ resultado.total }}</li>
+        <li>Valor final: R$ {{ resultado.final }}</li>
+        <li>Rendimento: R$ {{ resultado.rendimento }} ({{ resultado.percentual }}%)</li>
+      </ul>
     </section>
     {% endif %}
 
-</div>
+  </main>
 
-<script>
-const tipo = document.getElementById("tipo");
-const ipca = document.getElementById("ipcaExtra");
-const cdi = document.getElementById("cdiExtra");
-
-tipo.addEventListener("change", () => {
-    ipca.classList.add("hidden");
-    cdi.classList.add("hidden");
-
-    if (tipo.value === "ipca") ipca.classList.remove("hidden");
-    if (tipo.value === "cdb") cdi.classList.remove("hidden");
-});
-</script>
-
+  <!-- JS entra no Passo 2 -->
 </body>
 </html>
