@@ -1,91 +1,142 @@
-/* RESET BÁSICO */
+/* RESET E BASE */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-/* FUNDO DA PÁGINA */
 body {
-    min-height: 100vh;
-    background: #f4f6f8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #2a0052, #000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
 }
 
-/* CONTAINER PRINCIPAL */
+/* CONTAINER CENTRAL */
 .container {
-    background: #ffffff;
-    width: 100%;
-    max-width: 700px;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  width: 100%;
+  max-width: 480px;
+  background: #121212;
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
 }
 
-/* TÍTULO */
+/* TÍTULOS */
 h1 {
-    margin-bottom: 25px;
-    color: #333;
+  color: #fff;
+  text-align: center;
+  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+  margin-bottom: 8px;
+}
+
+.sub {
+  color: #b3b3b3;
+  text-align: center;
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  margin-bottom: 24px;
 }
 
 /* FORMULÁRIO */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* LABELS */
 label {
-    text-align: left;
-    font-weight: bold;
-    color: #444;
+  color: #ddd;
+  font-size: 0.85rem;
+  margin-top: 14px;
+  display: block;
 }
 
-/* INPUTS */
 input,
 select {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 16px;
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border-radius: 10px;
+  border: none;
+  background: #1f1f1f;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid #4f46e5;
 }
 
 /* BOTÃO */
 button {
-    margin-top: 10px;
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    background: #2563eb;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
+  margin-top: 26px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4f46e5, #3b82f6);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 button:hover {
-    background: #1e40af;
+  opacity: 0.9;
 }
 
 /* RESULTADO */
 .resultado {
-    margin-top: 25px;
-    padding: 20px;
-    background: #f1f5f9;
-    border-radius: 8px;
-    color: #111;
-    font-size: 18px;
+  margin-top: 28px;
+  background: #1b1b1b;
+  padding: 18px;
+  border-radius: 14px;
 }
 
-/* RESPONSIVO */
-@media (max-width: 600px) {
-    .container {
-        padding: 20px;
-    }
+.resultado h2 {
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.resultado p {
+  color: #ddd;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.educativo {
+  margin-top: 10px;
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+/* CONTROLE DE CAMPOS */
+.hidden {
+  display: none;
+}
+
+/* ===================== */
+/* TELAS MAIORES (TABLET) */
+/* ===================== */
+@media (min-width: 768px) {
+  .container {
+    max-width: 600px;
+    padding: 32px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+}
+
+/* ===================== */
+/* TELAS GRANDES (DESKTOP) */
+/* ===================== */
+@media (min-width: 1200px) {
+  body {
+    padding: 40px;
+  }
+
+  .container {
+    max-width: 680px;
+  }
 }
