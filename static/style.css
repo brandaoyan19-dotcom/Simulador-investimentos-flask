@@ -14,56 +14,57 @@ body {
   color: #fff;
 }
 
-.container {
+.app {
   width: 100%;
-  max-width: 420px;
+  max-width: 720px; /* MAIOR PARA TABLET */
   padding: 24px;
 }
 
 .card {
+  width: 100%;
   background: #121212;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .subtitle {
   text-align: center;
-  font-size: 14px;
+  font-size: 15px;
   opacity: 0.8;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
 }
 
 label {
-  font-size: 14px;
-  margin-top: 14px;
+  font-size: 15px;
+  margin-top: 16px;
   display: block;
 }
 
 small {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   opacity: 0.7;
   margin-bottom: 6px;
 }
 
 input, select, button {
   width: 100%;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px;
+  border-radius: 10px;
   border: none;
-  margin-bottom: 10px;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 input, select {
   background: #1e1e1e;
   color: #fff;
+  margin-bottom: 12px;
 }
 
 button {
@@ -71,17 +72,24 @@ button {
   color: #000;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 16px;
 }
 
 .resultado {
-  margin-top: 20px;
+  margin-top: 24px;
   background: #1a1a1a;
-  padding: 16px;
-  border-radius: 12px;
-  font-size: 14px;
+  padding: 20px;
+  border-radius: 14px;
+  font-size: 15px;
 }
 
 .resultado p {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+/* 📱 Ajuste fino para celular */
+@media (max-width: 480px) {
+  .card {
+    padding: 22px;
+  }
 }
