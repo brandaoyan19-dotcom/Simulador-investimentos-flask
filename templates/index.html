@@ -1,113 +1,190 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simulador Financeiro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Investimentos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* ===== Reset básico ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
 
-  <!-- CSS será ajustado no Passo 3 -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        html, body {
+            height: 100%;
+            width: 100%;
+            background-color: #000;
+            color: #fff;
+        }
+
+        /* ===== Container central ===== */
+        .container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* ===== Formulário ===== */
+        form {
+            width: 100%;
+            max-width: 500px;
+            background-color: #111;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #00d1b2; /* cor estilo fintech */
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #00d1b2;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background-color: #00b89c;
+        }
+
+        /* ===== Microexplicações ===== */
+        .explicacao {
+            font-size: 0.85rem;
+            margin-top: 10px;
+            color: #ccc;
+        }
+
+        /* ===== Resultado ===== */
+        .resultado {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #222;
+            border-radius: 8px;
+        }
+
+        /* ===== Responsivo ===== */
+        @media (max-width: 600px) {
+            form {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            input, select, button {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <main class="app">
+    <div class="container">
+        <form method="POST" action="/">
+            <h1>Simulador de Investimentos</h1>
+            
+            <label for="tipo">Tipo de investimento</label>
+            <select name="tipo" id="tipo" onchange="controlarCampos()" required>
+                <option value="selic">Tesouro Selic</option>
+                <option value="ipca">Tesouro IPCA+</option>
+                <option value="cdb">CDB</option>
+            </select>
+            <div class="explicacao" id="explicacao-tipo">
+                Escolha o tipo de investimento. Cada opção tem características diferentes.
+            </div>
 
-    <!-- CABEÇALHO -->
-    <header class="header">
-      <h1>Simulador Financeiro</h1>
-      <p>Simule investimentos de forma simples e consciente</p>
-    </header>
+            <label for="valor_inicial">Valor inicial (R$)</label>
+            <input type="number" step="0.01" name="valor_inicial" required>
+            <div class="explicacao">Quanto você vai investir no início.</div>
 
-    <!-- FORMULÁRIO -->
-    <form method="post" class="form">
+            <label for="aporte_mensal">Aporte mensal (R$)</label>
+            <input type="number" step="0.01" name="aporte_mensal" required>
+            <div class="explicacao">Quanto você pretende adicionar todo mês.</div>
 
-      <!-- ETAPA 1 — DADOS BÁSICOS -->
-      <section class="step">
-        <h2>1️⃣ Dados iniciais</h2>
+            <label for="periodo">Período (meses)</label>
+            <input type="number" name="periodo" required>
+            <div class="explicacao">Por quantos meses você pretende investir.</div>
 
-        <label>
-          Valor inicial
-          <input type="number" name="valor_inicial" placeholder="Ex: 1000" required>
-          <small>Quanto você já tem para começar.</small>
-        </label>
+            <!-- Campos extras -->
+            <div id="campo-ipca" style="display:none;">
+                <label for="ipca_extra">Qual adicional acima do IPCA? (%)</label>
+                <input type="number" step="0.01" name="ipca_extra" id="ipca_extra">
+                <div class="explicacao">O Tesouro IPCA+ protege contra a inflação e paga um ganho real.</div>
+            </div>
 
-        <label>
-          Aporte mensal
-          <input type="number" name="aporte" placeholder="Ex: 200" required>
-          <small>Quanto pretende investir todo mês.</small>
-        </label>
+            <div id="campo-cdb" style="display:none;">
+                <label for="cdi_percent">Qual porcentagem do CDI? (%)</label>
+                <input type="number" step="0.01" name="cdi_percent" id="cdi_percent">
+                <div class="explicacao">O CDB rende um percentual do CDI, que acompanha a Selic.</div>
+            </div>
 
-        <label>
-          Prazo (anos)
-          <input type="number" name="anos" placeholder="Ex: 5" required>
-          <small>Por quanto tempo pretende investir.</small>
-        </label>
-      </section>
+            <button type="submit">Simular investimento</button>
 
-      <!-- ETAPA 2 — TIPO DE INVESTIMENTO -->
-      <section class="step">
-        <h2>2️⃣ Tipo de investimento</h2>
+            {% if resultado %}
+            <div class="resultado">
+                <p>Total investido: R$ {{ resultado.total_investido }}</p>
+                <p>Valor final: R$ {{ resultado.valor_final }}</p>
+                <p>Rendimento: R$ {{ resultado.rendimento }}</p>
+                <p>{{ explicacao }}</p>
+                {% if resultado.rendimento / resultado.total_investido * 100 > 0 %}
+                <p>💡 Vale a pena!</p>
+                {% else %}
+                <p>💡 Não vale a pena.</p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </form>
+    </div>
 
-        <label>
-          Escolha uma opção
-          <select name="tipo" id="tipo-investimento" required>
-            <option value="">Selecione</option>
-            <option value="selic">Tesouro Selic</option>
-            <option value="ipca">Tesouro IPCA+</option>
-            <option value="cdb">CDB</option>
-          </select>
-          <small>O tipo define como o dinheiro rende ao longo do tempo.</small>
-        </label>
-      </section>
+    <script>
+        function controlarCampos() {
+            const tipo = document.getElementById("tipo").value;
+            const campoIpca = document.getElementById("campo-ipca");
+            const campoCdi = document.getElementById("campo-cdb");
 
-      <!-- ETAPA 3 — CAMPOS CONDICIONAIS -->
-      <!-- OBS: ficam INVISÍVEIS por padrão -->
-      <section class="step hidden" id="campo-ipca">
-        <h2>3️⃣ Detalhe do IPCA+</h2>
+            if (tipo === "ipca") {
+                campoIpca.style.display = "block";
+                campoCdi.style.display = "none";
+            } else if (tipo === "cdb") {
+                campoCdi.style.display = "block";
+                campoIpca.style.display = "none";
+            } else {
+                campoIpca.style.display = "none";
+                campoCdi.style.display = "none";
+            }
+        }
 
-        <label>
-          Adicional acima do IPCA (%)
-          <input type="number" step="0.1" name="ipca_extra" placeholder="Ex: 5">
-          <small>Ganho real acima da inflação oficial (IPCA).</small>
-        </label>
-      </section>
-
-      <section class="step hidden" id="campo-cdb">
-        <h2>3️⃣ Detalhe do CDB</h2>
-
-        <label>
-          Percentual do CDI (%)
-          <input type="number" step="1" name="cdi" placeholder="Ex: 110">
-          <small>Quanto do CDI o banco paga.</small>
-        </label>
-      </section>
-
-      <!-- ETAPA 4 — AÇÃO -->
-      <section class="step">
-        <button type="submit">Simular investimento</button>
-        <small>A simulação só acontece ao clicar no botão.</small>
-      </section>
-
-    </form>
-
-    <!-- RESULTADO (renderizado pelo backend depois) -->
-    {% if resultado %}
-    <section class="resultado">
-      <h2>Resultado da simulação</h2>
-
-      <p><strong>{{ resultado.vale }}</strong></p>
-      <p>{{ resultado.explicacao }}</p>
-
-      <ul>
-        <li>Total investido: R$ {{ resultado.total }}</li>
-        <li>Valor final: R$ {{ resultado.final }}</li>
-        <li>Rendimento: R$ {{ resultado.rendimento }} ({{ resultado.percentual }}%)</li>
-      </ul>
-    </section>
-    {% endif %}
-
-  </main>
-
-  <!-- JS entra no Passo 2 -->
+        // Inicializa ao carregar
+        window.onload = controlarCampos;
+    </script>
 </body>
 </html>
