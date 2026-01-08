@@ -1,142 +1,88 @@
-/* RESET E BASE */
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #5a2fd3, #0a0a23);
+    color: #fff;
 }
 
 body {
-  min-height: 100vh;
-  background: radial-gradient(circle at top, #2a0052, #000);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* CONTAINER CENTRAL */
 .container {
-  width: 100%;
-  max-width: 480px;
-  background: #121212;
-  padding: 28px;
-  border-radius: 18px;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+    width: 100%;
+    min-height: 100vh;
+    max-width: 480px;
+    padding: 24px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* TÍTULOS */
 h1 {
-  color: #fff;
-  text-align: center;
-  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
-  margin-bottom: 8px;
+    text-align: center;
+    margin-bottom: 8px;
 }
 
 .sub {
-  color: #b3b3b3;
-  text-align: center;
-  font-size: clamp(0.85rem, 2vw, 0.95rem);
-  margin-bottom: 24px;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    opacity: 0.9;
 }
 
-/* FORMULÁRIO */
+.field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 14px;
+}
+
 label {
-  color: #ddd;
-  font-size: 0.85rem;
-  margin-top: 14px;
-  display: block;
+    font-weight: bold;
 }
 
-input,
-select {
-  width: 100%;
-  padding: 12px;
-  margin-top: 6px;
-  border-radius: 10px;
-  border: none;
-  background: #1f1f1f;
-  color: #fff;
-  font-size: 0.95rem;
+small {
+    font-size: 0.75rem;
+    opacity: 0.85;
+    margin-bottom: 4px;
 }
 
-input:focus,
-select:focus {
-  outline: 2px solid #4f46e5;
+input, select {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
 }
 
-/* BOTÃO */
 button {
-  margin-top: 26px;
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #4f46e5, #3b82f6);
-  color: #fff;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #00ff88;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 button:hover {
-  opacity: 0.9;
+    opacity: 0.9;
 }
 
-/* RESULTADO */
 .resultado {
-  margin-top: 28px;
-  background: #1b1b1b;
-  padding: 18px;
-  border-radius: 14px;
-}
-
-.resultado h2 {
-  color: #fff;
-  font-size: 1.1rem;
-  margin-bottom: 8px;
-}
-
-.resultado p {
-  color: #ddd;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.educativo {
-  margin-top: 10px;
-  color: #9ca3af;
-  font-size: 0.85rem;
-}
-
-/* CONTROLE DE CAMPOS */
-.hidden {
-  display: none;
-}
-
-/* ===================== */
-/* TELAS MAIORES (TABLET) */
-/* ===================== */
-@media (min-width: 768px) {
-  .container {
-    max-width: 600px;
-    padding: 32px;
-  }
-
-  h1 {
-    font-size: 1.8rem;
-  }
-}
-
-/* ===================== */
-/* TELAS GRANDES (DESKTOP) */
-/* ===================== */
-@media (min-width: 1200px) {
-  body {
-    padding: 40px;
-  }
-
-  .container {
-    max-width: 680px;
-  }
+    margin-top: 20px;
+    padding: 16px;
+    background: rgba(0,0,0,0.35);
+    border-radius: 10px;
 }

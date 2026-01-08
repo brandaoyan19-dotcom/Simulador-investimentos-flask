@@ -1,71 +1,85 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Simulador Educacional de Investimentos</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>Simulador Educacional de Investimentos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function mostrarCampos() {
+            const tipo = document.getElementById("tipo").value;
+            document.getElementById("ipcaCampo").style.display = tipo === "ipca" ? "block" : "none";
+            document.getElementById("cdbCampo").style.display = tipo === "cdb" ? "block" : "none";
+        }
+    </script>
 </head>
 <body>
 
 <div class="container">
-  <h1>Simulador Educacional de Investimentos</h1>
-  <p class="sub">
-    Aprenda como o tempo, os aportes e os juros fazem seu dinheiro crescer.
-  </p>
 
-  <form method="POST">
-    <label>Valor inicial (R$)</label>
-    <input type="number" name="valor" step="0.01" required>
+    <h1>Simulador Educacional de Investimentos</h1>
+    <p class="sub">Entenda, passo a passo, como seu dinheiro pode crescer 📈</p>
 
-    <label>Aporte mensal (R$)</label>
-    <input type="number" name="aporte" step="0.01" required>
+    <form method="post">
 
-    <label>Período (anos)</label>
-    <input type="number" name="tempo" required>
+        <div class="field">
+            <label>Valor inicial</label>
+            <small>💡 Quanto você começa investindo</small>
+            <input type="number" step="0.01" name="valor_inicial" required>
+        </div>
 
-    <label>Tipo de investimento</label>
-    <select name="tipo" id="tipo" required>
-      <option value="">Selecione</option>
-      <option value="cdb">CDB</option>
-      <option value="ipca">IPCA+</option>
-    </select>
+        <div class="field">
+            <label>Aporte mensal</label>
+            <small>💡 Quanto você investe todo mês</small>
+            <input type="number" step="0.01" name="aporte_mensal" required>
+        </div>
 
-    <div id="campo-cdb" class="hidden">
-      <label>% do CDI (ex: 110)</label>
-      <input type="number" name="percentual_cdi" step="0.01">
+        <div class="field">
+            <label>Tempo (anos)</label>
+            <small>💡 Por quanto tempo o dinheiro ficará investido</small>
+            <input type="number" name="tempo" required>
+        </div>
+
+        <div class="field">
+            <label>Tipo de investimento</label>
+            <small>💡 Cada opção tem um objetivo diferente</small>
+            <select name="tipo" id="tipo" onchange="mostrarCampos()" required>
+                <option value="">Selecione</option>
+                <option value="selic">Tesouro Selic (segurança)</option>
+                <option value="ipca">Tesouro IPCA+ (proteção contra inflação)</option>
+                <option value="cdb">CDB (renda fixa bancária)</option>
+            </select>
+        </div>
+
+        <div class="field" id="ipcaCampo" style="display:none;">
+            <label>Adicional do IPCA (%)</label>
+            <small>💡 Ganho acima da inflação</small>
+            <input type="number" step="0.01" name="ipca_adicional">
+        </div>
+
+        <div class="field" id="cdbCampo" style="display:none;">
+            <label>% do CDI</label>
+            <small>💡 Quanto do CDI o banco paga</small>
+            <input type="number" step="1" name="cdi_percentual">
+        </div>
+
+        <button type="submit">Simular investimento</button>
+    </form>
+
+    {% if resultado %}
+    <div class="resultado">
+        <h2>Resultado da simulação</h2>
+
+        <p><strong>Total investido:</strong> R$ {{ total_investido }}</p>
+        <p><strong>Valor final:</strong> R$ {{ montante }}</p>
+        <p><strong>Rendimento:</strong> R$ {{ lucro }}</p>
+        <p><strong>Ganho percentual:</strong> {{ percentual }}%</p>
+
+        <h3>{{ vale_a_pena }}</h3>
+        <p>{{ explicacao }}</p>
     </div>
+    {% endif %}
 
-    <div id="campo-ipca" class="hidden">
-      <label>IPCA + (% ao ano)</label>
-      <input type="number" name="adicional" step="0.01">
-    </div>
-
-    <button type="submit">Simular investimento</button>
-  </form>
-
-  {% if resultado %}
-  <div class="resultado">
-    <h2>Resultado da simulação</h2>
-    <p>{{ resultado|safe }}</p>
-    <p class="educativo">{{ explicacao }}</p>
-  </div>
-  {% endif %}
 </div>
-
-<script>
-  const tipo = document.getElementById("tipo");
-  const cdb = document.getElementById("campo-cdb");
-  const ipca = document.getElementById("campo-ipca");
-
-  tipo.addEventListener("change", () => {
-    cdb.classList.add("hidden");
-    ipca.classList.add("hidden");
-
-    if (tipo.value === "cdb") cdb.classList.remove("hidden");
-    if (tipo.value === "ipca") ipca.classList.remove("hidden");
-  });
-</script>
 
 </body>
 </html>

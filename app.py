@@ -4,56 +4,66 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    resultado = None
-    explicacao = None
+    resultado = False
 
     if request.method == "POST":
-        valor_inicial = float(request.form.get("valor", 0))
-        aporte_mensal = float(request.form.get("aporte", 0))
-        anos = int(request.form.get("tempo", 0))
+        valor_inicial = float(request.form.get("valor_inicial"))
+        aporte_mensal = float(request.form.get("aporte_mensal"))
+        tempo = int(request.form.get("tempo"))
         tipo = request.form.get("tipo")
 
-        meses = anos * 12
+        # Taxas anuais médias (educacionais)
+        selic = 0.10
+        ipca = 0.04
+        cdi = 0.10
+
+        ipca_adicional = float(request.form.get("ipca_adicional") or 0)
+        cdi_percentual = float(request.form.get("cdi_percentual") or 100)
+
+        meses = tempo * 12
         total_investido = valor_inicial + aporte_mensal * meses
-        montante = valor_inicial
 
-        if tipo == "cdb":
-            percentual_cdi = float(request.form.get("percentual_cdi", 0))
-            cdi_anual = 0.10  # 10% ao ano (educativo)
-            taxa_anual = cdi_anual * (percentual_cdi / 100)
-            taxa_mensal = taxa_anual / 12
-
-            for _ in range(meses):
-                montante = montante * (1 + taxa_mensal) + aporte_mensal
-
-            explicacao = (
-                f"Este CDB rende {percentual_cdi}% do CDI. "
-                f"Quanto maior o percentual, maior o rendimento ao longo do tempo."
-            )
+        if tipo == "selic":
+            taxa = selic
 
         elif tipo == "ipca":
-            adicional = float(request.form.get("adicional", 0))
-            ipca_anual = 0.04  # 4% ao ano (educativo)
-            taxa_anual = ipca_anual + (adicional / 100)
-            taxa_mensal = taxa_anual / 12
+            taxa = ipca + (ipca_adicional / 100)
 
-            for _ in range(meses):
-                montante = montante * (1 + taxa_mensal) + aporte_mensal
+        elif tipo == "cdb":
+            taxa = cdi * (cdi_percentual / 100)
 
-            explicacao = (
-                f"O IPCA+ protege contra a inflação ({ipca_anual*100:.1f}%) "
-                f"e ainda paga {adicional}% ao ano acima dela."
-            )
+        montante = valor_inicial
+        taxa_mensal = (1 + taxa) ** (1 / 12) - 1
+
+        for _ in range(meses):
+            montante = montante * (1 + taxa_mensal) + aporte_mensal
 
         lucro = montante - total_investido
+        percentual = (lucro / total_investido) * 100
 
-        resultado = (
-            f"Total investido: R$ {total_investido:,.2f}<br>"
-            f"Valor final: R$ {montante:,.2f}<br>"
-            f"Lucro: R$ {lucro:,.2f}"
+        vale_a_pena = "Vale a pena" if percentual >= 6 else "Não vale a pena"
+        explicacao = (
+            "Boa escolha para o período escolhido."
+            if percentual >= 6
+            else "Pode render pouco para esse prazo."
         )
 
-    return render_template("index.html", resultado=resultado, explicacao=explicacao)
+        resultado = True
+
+        return render_template(
+            "index.html",
+            resultado=resultado,
+            tipo=tipo,
+            tempo=tempo,
+            total_investido=round(total_investido, 2),
+            montante=round(montante, 2),
+            lucro=round(lucro, 2),
+            percentual=round(percentual, 2),
+            vale_a_pena=vale_a_pena,
+            explicacao=explicacao
+        )
+
+    return render_template("index.html", resultado=resultado)
 
 if __name__ == "__main__":
     app.run(debug=True)
