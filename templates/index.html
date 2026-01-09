@@ -17,17 +17,6 @@
 
         <form method="POST">
 
-            <!-- Tipo de investimento -->
-            <div class="field">
-                <label>Tipo de investimento</label>
-                <select name="tipo" id="tipo" required onchange="ajustarCampos()">
-                    <option value="">Selecione</option>
-                    <option value="selic">Tesouro Selic</option>
-                    <option value="ipca">Tesouro IPCA+</option>
-                    <option value="cdb">CDB</option>
-                </select>
-                <small>Escolha o produto financeiro que deseja simular.</small>
-            </div>
 
             <!-- Valor inicial -->
             <div class="field">
@@ -49,7 +38,19 @@
                 <input type="number" name="periodo" required>
                 <small>Tempo total do investimento.</small>
             </div>
-
+            
+             <!-- Tipo de investimento -->
+            <div class="field">
+    <label>Tipo de investimento</label>
+    <select name="tipo" id="tipo" required onchange="ajustarCampos()">
+        <option value="">Selecione</option>
+        <option value="selic">Tesouro Selic</option>
+        <option value="ipca">Tesouro IPCA+</option>
+        <option value="cdb">CDB</option>
+    </select>
+    <small>Escolha o produto financeiro que deseja simular.</small>
+            </div>
+            
             <!-- IPCA -->
             <div class="field hidden" id="campo-ipca">
                 <label>Adicional acima do IPCA (%)</label>

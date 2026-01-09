@@ -63,12 +63,12 @@ def index():
         percentual_ganho = (rendimento / total_investido) * 100 if total_investido > 0 else 0
 
         resultado = {
-            "total_investido": round(total_investido, 2),
-            "rendimento": round(rendimento, 2),
-            "valor_final": round(valor_final, 2),
-            "percentual_ganho": round(percentual_ganho, 2),
-            "explicacao": explicacao,
-            "vale_a_pena": vale_a_pena
+    "total_investido": f"{total_investido:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."),
+    "rendimento": f"{rendimento:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."),
+    "valor_final": f"{valor_final:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."),
+    "percentual_ganho": f"{percentual_ganho:.2f}",
+    "explicacao": explicacao,
+    "vale_a_pena": vale_a_pena
         }
 
     return render_template("index.html", resultado=resultado)
