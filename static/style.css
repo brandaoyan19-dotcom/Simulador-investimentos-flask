@@ -1,138 +1,114 @@
-.hidden {
-  display: none !important;
-}
-*{
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 html, body {
     width: 100%;
     height: 100%;
-}
-
-body {
-    background: #000;
-    color: #fff;
+    background-color: #000;
     font-family: Arial, sans-serif;
+    color: #fff;
 }
 
-/* APP */
-.app {
+.container {
     min-height: 100vh;
     width: 100%;
-    padding: 16px;
+    max-width: 900px;
+    margin: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* TOPO */
-header {
+h1 {
     text-align: center;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #bbb;
     margin-bottom: 24px;
 }
 
-header h1 {
-    font-size: 2rem;
-}
-
-header p {
-    color: #aaa;
-    margin-top: 6px;
-}
-
-/* BASE */
-.card {
-    width: 100%;
-    background: #000;
-    padding: 0;
-    border-radius: 0;
-}
-
-/* FORM */
-.grid {
+form {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-/* CAMPOS */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
 label {
     font-weight: bold;
 }
 
 input, select {
-    width: 100%;
-    padding: 16px;
-    font-size: 1.1rem;
-    background: #111;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 6px;
     border: none;
-    border-radius: 14px;
-    color: #fff;
 }
 
 small {
+    font-size: 0.8rem;
     color: #aaa;
 }
 
-/* BOTÃO */
 button {
-    margin-top: 24px;
-    padding: 18px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    background: #00c853;
-    color: #000;
+    margin-top: 12px;
+    padding: 14px;
+    font-size: 1.1rem;
+    background-color: #1e90ff;
+    color: #fff;
     border: none;
-    border-radius: 16px;
-    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
-/* RESULTADO */
+button:hover {
+    opacity: 0.9;
+}
+
 .resultado {
     margin-top: 32px;
-    padding: 24px;
-    background: #111;
-    border-radius: 18px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #111;
 }
 
-/* ======================= */
-/* 📲 TABLET */
-/* ======================= */
-@media (min-width: 600px) {
-    .app {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+.resultado h2 {
+    margin-bottom: 12px;
+}
 
-    .card, .resultado {
-        max-width: 720px;
-        padding: 32px;
-        background: #111;
-        border-radius: 24px;
+.explicacao {
+    margin-top: 12px;
+    font-size: 0.95rem;
+    color: #ddd;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+    .container {
+        max-width: 700px;
     }
 }
 
-/* ======================= */
-/* 💻 DESKTOP */
-/* ======================= */
+/* Desktop */
 @media (min-width: 1024px) {
-    .card, .resultado {
-        max-width: 1100px;
-        padding: 40px;
-    }
-
-    header h1 {
-        font-size: 2.8rem;
-    }
-
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
-
-    button {
-        grid-column: span 3;
+    .container {
+        max-width: 900px;
     }
 }
