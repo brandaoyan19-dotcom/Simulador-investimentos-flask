@@ -1,113 +1,78 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clareza Invest</title>
+  <meta charset="UTF-8">
+  <title>Nexos Invest</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <main class="container">
-    <header class="header">
-      <h1>Clareza Invest</h1>
-      <p class="subtitle">
-        Simule investimentos em renda fixa e entenda, de forma simples, como seu dinheiro pode evoluir no tempo.
-      </p>
-    </header>
 
-    <form method="POST" class="card">
-      <!-- Passo 1 -->
-      <div class="field">
-        <label class="title">Quanto você quer investir agora?</label>
-        <p class="legend">Esse é o valor que você começa investindo hoje.</p>
-        <input type="number" name="valor_inicial" step="0.01" required>
-      </div>
+<div class="container">
 
-      <!-- Passo 2 -->
-      <div class="field">
-        <label class="title">Quanto você pretende investir todo mês?</label>
-        <p class="legend">Investir um valor mensal ajuda seu dinheiro a crescer com mais consistência ao longo do tempo.</p>
-        <input type="number" name="aporte_mensal" step="0.01" required>
-      </div>
+  <h1>Nexos Invest</h1>
+  <p class="subtitle">Simule. Compare. Entenda.</p>
 
-      <!-- Passo 3 -->
-      <div class="field">
-        <label class="title">Por quanto tempo pretende investir? (anos)</label>
-        <p class="legend">O prazo influencia diretamente o resultado do investimento.</p>
-        <input type="number" name="anos" required>
-      </div>
+  <form method="POST">
 
-      <!-- Passo 4 -->
-      <div class="field">
-        <label class="title">Escolha o tipo de investimento</label>
-        <select name="tipo" id="tipo" onchange="ajustarCampos()" required>
-          <option value="">Selecione</option>
-          <option value="selic">Tesouro Selic</option>
-          <option value="ipca">Tesouro IPCA+</option>
-          <option value="cdb">CDB</option>
-        </select>
+    <label>Quanto você vai investir agora?</label>
+    <input type="number" name="inicial" required>
 
-        <p class="legend dynamic" id="descricao"></p>
-      </div>
+    <label>Quanto você pretende investir todo mês?</label>
+    <input type="number" name="aporte" required>
 
-      <!-- Condicional IPCA -->
-      <div class="field hidden" id="campo_ipca">
-        <label class="title">Qual adicional acima do IPCA?</label>
-        <p class="legend">Essa é a taxa que você recebe além da inflação.</p>
-        <input type="number" name="ipca_adicional" step="0.01">
-      </div>
+    <label>Por quantos anos você pretende investir?</label>
+    <input type="number" name="anos" required>
 
-      <!-- Condicional CDI -->
-      <div class="field hidden" id="campo_cdi">
-        <label class="title">Qual percentual do CDI?</label>
-        <p class="legend">
-          Esse percentual define quanto o investimento rende em relação ao CDI ao longo do tempo.
-        </p>
-        <input type="number" name="cdi_percentual" step="0.01">
-      </div>
+    <label>Escolha o tipo de investimento</label>
+    <select name="tipo" id="tipo" required onchange="mostrarExtras()">
+      <option value="">Selecione</option>
+      <option value="selic">Tesouro Selic – acompanha os juros</option>
+      <option value="ipca">Tesouro IPCA+ – protege da inflação</option>
+      <option value="cdb">CDB – rendimento atrelado ao CDI</option>
+    </select>
 
-      <button type="submit" class="btn">Simular investimento</button>
-    </form>
+    <div id="ipca_extra" class="extra">
+      <label>Qual adicional acima do IPCA? (%)</label>
+      <input type="number" step="0.01" name="ipca_extra">
+    </div>
 
-    {% if resultado %}
-    <section class="result">
-      <h2>Resultado da simulação</h2>
+    <div id="cdi_extra" class="extra">
+      <label>Qual percentual do CDI?</label>
+      <input type="number" step="1" name="cdi_percentual">
+    </div>
 
-      <p><strong>Você investiu:</strong> R$ {{ resultado.investido }}</p>
-      <p><strong>Valor final:</strong> R$ {{ resultado.final }}</p>
-      <p><strong>Rendimento:</strong> R$ {{ resultado.rendimento }} ({{ resultado.percentual }}%)</p>
+    <button type="submit">Simular investimento</button>
+  </form>
 
-      <p class="explain">{{ resultado.explicacao }}</p>
-      <p class="veredito {{ resultado.classe }}">{{ resultado.veredito }}</p>
-    </section>
-    {% endif %}
-  </main>
+  {% if resultado %}
+  <div id="resultado" class="resultado">
+    <h2>Resultado da simulação</h2>
+    <p>{{ resultado.descricao }}</p>
 
-  <script>
-    function ajustarCampos() {
-      const tipo = document.getElementById("tipo").value;
-      const desc = document.getElementById("descricao");
-      const ipca = document.getElementById("campo_ipca");
-      const cdi = document.getElementById("campo_cdi");
+    <ul>
+      <li><strong>Total investido:</strong> R$ {{ resultado.investido }}</li>
+      <li><strong>Valor final:</strong> R$ {{ resultado.saldo }}</li>
+      <li><strong>Rendimento:</strong> R$ {{ resultado.rendimento }} ({{ resultado.percentual }}%)</li>
+    </ul>
 
-      ipca.classList.add("hidden");
-      cdi.classList.add("hidden");
+    <h3>{{ resultado.vale }}</h3>
+  </div>
+  {% endif %}
 
-      if (tipo === "selic") {
-        desc.textContent =
-          "É um título público do governo que rende conforme a taxa Selic. Indicado para segurança e liquidez.";
-      } else if (tipo === "ipca") {
-        desc.textContent =
-          "É um título público que rende a inflação (IPCA) mais uma taxa fixa. Indicado para longo prazo.";
-        ipca.classList.remove("hidden");
-      } else if (tipo === "cdb") {
-        desc.textContent =
-          "É um investimento em que você empresta dinheiro a um banco e recebe juros atrelados ao CDI.";
-        cdi.classList.remove("hidden");
-      } else {
-        desc.textContent = "";
-      }
-    }
-  </script>
+</div>
+
+<script>
+function mostrarExtras() {
+  const tipo = document.getElementById("tipo").value;
+  document.getElementById("ipca_extra").style.display = tipo === "ipca" ? "block" : "none";
+  document.getElementById("cdi_extra").style.display = tipo === "cdb" ? "block" : "none";
+}
+
+const resultado = document.getElementById("resultado");
+if (resultado) {
+  resultado.scrollIntoView({ behavior: "smooth" });
+}
+</script>
+
 </body>
 </html>
