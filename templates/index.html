@@ -1,105 +1,113 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Simulador Educacional de Investimentos</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clareza Invest</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
-    <main class="container">
+  <main class="container">
+    <header class="header">
+      <h1>Clareza Invest</h1>
+      <p class="subtitle">
+        Simule investimentos em renda fixa e entenda, de forma simples, como seu dinheiro pode evoluir no tempo.
+      </p>
+    </header>
 
-        <h1>Simulador de Investimentos</h1>
-        <p class="subtitle">
-            Compare Tesouro Selic, Tesouro IPCA+ e CDB de forma simples e educativa.
+    <form method="POST" class="card">
+      <!-- Passo 1 -->
+      <div class="field">
+        <label class="title">Quanto você quer investir agora?</label>
+        <p class="legend">Esse é o valor que você começa investindo hoje.</p>
+        <input type="number" name="valor_inicial" step="0.01" required>
+      </div>
+
+      <!-- Passo 2 -->
+      <div class="field">
+        <label class="title">Quanto você pretende investir todo mês?</label>
+        <p class="legend">Investir um valor mensal ajuda seu dinheiro a crescer com mais consistência ao longo do tempo.</p>
+        <input type="number" name="aporte_mensal" step="0.01" required>
+      </div>
+
+      <!-- Passo 3 -->
+      <div class="field">
+        <label class="title">Por quanto tempo pretende investir? (anos)</label>
+        <p class="legend">O prazo influencia diretamente o resultado do investimento.</p>
+        <input type="number" name="anos" required>
+      </div>
+
+      <!-- Passo 4 -->
+      <div class="field">
+        <label class="title">Escolha o tipo de investimento</label>
+        <select name="tipo" id="tipo" onchange="ajustarCampos()" required>
+          <option value="">Selecione</option>
+          <option value="selic">Tesouro Selic</option>
+          <option value="ipca">Tesouro IPCA+</option>
+          <option value="cdb">CDB</option>
+        </select>
+
+        <p class="legend dynamic" id="descricao"></p>
+      </div>
+
+      <!-- Condicional IPCA -->
+      <div class="field hidden" id="campo_ipca">
+        <label class="title">Qual adicional acima do IPCA?</label>
+        <p class="legend">Essa é a taxa que você recebe além da inflação.</p>
+        <input type="number" name="ipca_adicional" step="0.01">
+      </div>
+
+      <!-- Condicional CDI -->
+      <div class="field hidden" id="campo_cdi">
+        <label class="title">Qual percentual do CDI?</label>
+        <p class="legend">
+          Esse percentual define quanto o investimento rende em relação ao CDI ao longo do tempo.
         </p>
+        <input type="number" name="cdi_percentual" step="0.01">
+      </div>
 
-        <form method="POST">
+      <button type="submit" class="btn">Simular investimento</button>
+    </form>
 
+    {% if resultado %}
+    <section class="result">
+      <h2>Resultado da simulação</h2>
 
-            <!-- Valor inicial -->
-            <div class="field">
-                <label>Valor inicial (R$)</label>
-                <input type="number" step="0.01" name="valor_inicial" required>
-                <small>Quanto você vai investir hoje.</small>
-            </div>
+      <p><strong>Você investiu:</strong> R$ {{ resultado.investido }}</p>
+      <p><strong>Valor final:</strong> R$ {{ resultado.final }}</p>
+      <p><strong>Rendimento:</strong> R$ {{ resultado.rendimento }} ({{ resultado.percentual }}%)</p>
 
-            <!-- Aporte mensal -->
-            <div class="field">
-                <label>Aporte mensal (R$)</label>
-                <input type="number" step="0.01" name="aporte_mensal" required>
-                <small>Valor investido todos os meses.</small>
-            </div>
+      <p class="explain">{{ resultado.explicacao }}</p>
+      <p class="veredito {{ resultado.classe }}">{{ resultado.veredito }}</p>
+    </section>
+    {% endif %}
+  </main>
 
-            <!-- Período -->
-            <div class="field">
-                <label>Período (anos)</label>
-                <input type="number" name="periodo" required>
-                <small>Tempo total do investimento.</small>
-            </div>
-            
-             <!-- Tipo de investimento -->
-            <div class="field">
-    <label>Tipo de investimento</label>
-    <select name="tipo" id="tipo" required onchange="ajustarCampos()">
-        <option value="">Selecione</option>
-        <option value="selic">Tesouro Selic</option>
-        <option value="ipca">Tesouro IPCA+</option>
-        <option value="cdb">CDB</option>
-    </select>
-    <small>Escolha o produto financeiro que deseja simular.</small>
-            </div>
-            
-            <!-- IPCA -->
-            <div class="field hidden" id="campo-ipca">
-                <label>Adicional acima do IPCA (%)</label>
-                <input type="number" step="0.01" name="ipca_extra">
-                <small>Ganho real acima da inflação.</small>
-            </div>
+  <script>
+    function ajustarCampos() {
+      const tipo = document.getElementById("tipo").value;
+      const desc = document.getElementById("descricao");
+      const ipca = document.getElementById("campo_ipca");
+      const cdi = document.getElementById("campo_cdi");
 
-            <!-- CDI -->
-            <div class="field hidden" id="campo-cdb">
-                <label>Percentual do CDI (%)</label>
-                <input type="number" step="0.01" name="cdi_percent">
-                <small>Quanto do CDI esse CDB paga.</small>
-            </div>
+      ipca.classList.add("hidden");
+      cdi.classList.add("hidden");
 
-            <button type="submit">Simular investimento</button>
-        </form>
-
-        {% if resultado %}
-        <section class="resultado">
-            <h2>Resultado da simulação</h2>
-
-            <p><strong>Total investido:</strong> R$ {{ resultado.total_investido }}</p>
-            <p><strong>Rendimento:</strong> R$ {{ resultado.rendimento }}</p>
-            <p><strong>Valor final:</strong> R$ {{ resultado.valor_final }}</p>
-            <p><strong>Ganho percentual:</strong> {{ resultado.percentual_ganho }}%</p>
-
-            <div class="explicacao">
-                <p>{{ resultado.explicacao }}</p>
-                <p><strong>{{ resultado.vale_a_pena }}</strong></p>
-            </div>
-        </section>
-        {% endif %}
-
-    </main>
-
-    <script>
-        function ajustarCampos() {
-            const tipo = document.getElementById("tipo").value;
-            document.getElementById("campo-ipca").classList.add("hidden");
-            document.getElementById("campo-cdb").classList.add("hidden");
-
-            if (tipo === "ipca") {
-                document.getElementById("campo-ipca").classList.remove("hidden");
-            }
-
-            if (tipo === "cdb") {
-                document.getElementById("campo-cdb").classList.remove("hidden");
-            }
-        }
-    </script>
+      if (tipo === "selic") {
+        desc.textContent =
+          "É um título público do governo que rende conforme a taxa Selic. Indicado para segurança e liquidez.";
+      } else if (tipo === "ipca") {
+        desc.textContent =
+          "É um título público que rende a inflação (IPCA) mais uma taxa fixa. Indicado para longo prazo.";
+        ipca.classList.remove("hidden");
+      } else if (tipo === "cdb") {
+        desc.textContent =
+          "É um investimento em que você empresta dinheiro a um banco e recebe juros atrelados ao CDI.";
+        cdi.classList.remove("hidden");
+      } else {
+        desc.textContent = "";
+      }
+    }
+  </script>
 </body>
-</html>       
+</html>
