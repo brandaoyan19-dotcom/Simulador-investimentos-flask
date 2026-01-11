@@ -59,9 +59,10 @@ form {
 
 /* LABELS (TÍTULO DA PERGUNTA) */
 label {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #00c853; /* destaque educativo */
+  font-size: 1.05rem;          /* um pouco maior */
+  font-weight: 600;            /* destaque real */
+  color: #ffffff;              /* branco puro */
+  letter-spacing: 0.2px;       /* refinamento visual */
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -69,10 +70,9 @@ label {
 
 /* MICROTEXTOS */
 label small {
-  font-size: 0.85rem; /* voltou ao tamanho correto */
+  font-size: 0.85em; /* voltou ao tamanho correto */
   font-weight: 400;
   color: rgba(255,255,255,0.75);
-  line-height: 1.4;
 }
 
 /* INPUTS */
