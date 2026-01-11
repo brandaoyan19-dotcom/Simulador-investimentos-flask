@@ -1,119 +1,125 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Nexos Invest</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexos Invest</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
 
-<div class="container">
+<body>
+  <div class="container">
+
+    <!-- TÍTULO -->
     <h1>Nexos Invest</h1>
     <p class="subtitle">Simule. Compare. Entenda.</p>
 
+    <!-- FORMULÁRIO -->
     <form method="POST">
 
-        <div class="campo">
-            <label>Valor inicial</label>
-            <small>É o valor que você começa investindo hoje.</small>
-            <input type="number" name="investimento_inicial" required>
-        </div>
+      <!-- VALOR INICIAL -->
+      <label>
+        Valor inicial
+        <small>Quanto você pretende investir agora</small>
+        <input type="number" name="valor_inicial" step="0.01" required>
+      </label>
 
-        <div class="campo">
-            <label>Aporte mensal</label>
-            <small>Quanto você pretende investir todo mês para acelerar o crescimento.</small>
-            <input type="number" name="aporte_mensal" required>
-        </div>
+      <!-- APORTE MENSAL -->
+      <label>
+        Aporte mensal
+        <small>Quanto você pretende investir todo mês</small>
+        <input type="number" name="aporte_mensal" step="0.01" required>
+      </label>
 
-        <div class="campo">
-            <label>Prazo do investimento (em anos)</label>
-            <small>O tempo é um dos principais fatores de crescimento do investimento.</small>
-            <input type="number" name="anos" required>
-        </div>
+      <!-- PERÍODO -->
+      <label>
+        Período do investimento
+        <small>Por quantos anos você pretende manter o investimento</small>
+        <input type="number" name="anos" required>
+      </label>
 
-        <div class="campo">
-            <label>Tipo de aplicação</label>
-            <small>Escolha de acordo com seu objetivo e perfil de risco.</small>
-            <select name="tipo" id="tipo" required onchange="mostrarCampos()">
-                <option value="">Selecione uma opção</option>
-                <option value="selic">
-                    Tesouro Selic — estabilidade e liquidez
-                </option>
-                <option value="ipca">
-                    Tesouro IPCA+ — proteção contra a inflação
-                </option>
-                <option value="cdb">
-                    CDB — rendimento atrelado ao CDI
-                </option>
-            </select>
-        </div>
+      <!-- OBJETIVO -->
+      <label>
+        Objetivo do investimento
+        <small>Ajuda a avaliar se esse investimento faz sentido para você</small>
+        <select name="prazo" required>
+          <option value="">Selecione</option>
+          <option value="curto">Curto prazo</option>
+          <option value="medio">Médio prazo</option>
+          <option value="longo">Longo prazo</option>
+        </select>
+      </label>
 
-        <!-- Campo condicional IPCA -->
-        <div class="campo escondido" id="campo-ipca">
-            <label>Adicional acima do IPCA (%)</label>
-            <small>
-                É o ganho real que você recebe além da inflação ao longo do tempo.
-            </small>
-            <input type="number" step="0.01" name="ipca_adicional">
-        </div>
+      <!-- TIPO DE INVESTIMENTO (POR ÚLTIMO) -->
+      <label>
+        Tipo de investimento
+        <small>Escolha o tipo de aplicação que deseja simular</small>
+        <select name="tipo" id="tipo" onchange="mostrarExtras()" required>
+          <option value="">Selecione</option>
+          <option value="selic">Tesouro Selic</option>
+          <option value="ipca">Tesouro IPCA+</option>
+          <option value="cdb">CDB</option>
+        </select>
+      </label>
 
-        <!-- Campo condicional CDI -->
-        <div class="campo escondido" id="campo-cdi">
-            <label>Percentual do CDI (%)</label>
-            <small>
-                É o percentual do CDI que vai fazer seu dinheiro render ao longo do tempo.
-            </small>
-            <input type="number" step="1" name="cdi_percentual">
-        </div>
+      <!-- EXTRA: CDI -->
+      <div class="extra" id="campo-cdi">
+        <label>
+          Percentual do CDI
+          <small>Indica quanto do CDI esse investimento paga e como isso impacta seu rendimento.</small>
+          <input type="number" name="percentual_cdi" step="0.01" placeholder="Ex: 120">
+        </label>
+      </div>
 
-        <button type="submit">Simular investimento</button>
+      <!-- EXTRA: IPCA -->
+      <div class="extra" id="campo-ipca">
+        <label>
+          Adicional acima do IPCA
+          <small>Percentual que o investimento paga além da inflação.</small>
+          <input type="number" name="adicional_ipca" step="0.01" placeholder="Ex: 5">
+        </label>
+      </div>
+
+      <!-- BOTÃO -->
+      <button type="submit">Simular investimento</button>
+
     </form>
 
+    <!-- RESULTADO -->
     {% if resultado %}
-    <div class="resultado" id="resultado">
-        <h2>Análise do resultado</h2>
+    <div class="resultado">
+      <h2>Análise do resultado</h2>
 
-        <p><strong>Total investido:</strong> {{ resultado.total_investido }}</p>
-        <p><strong>Valor final:</strong> {{ resultado.montante }}</p>
-        <p><strong>Ganho percentual:</strong> {{ resultado.percentual }}</p>
+      <ul>
+        <li><strong>Total investido:</strong> R$ {{ resultado.total_investido }}</li>
+        <li><strong>Valor final:</strong> R$ {{ resultado.valor_final }}</li>
+        <li><strong>Rendimento:</strong> {{ resultado.percentual }}%</li>
+      </ul>
 
-        <div class="veredito">
-            <strong>Veredito educativo:</strong>
-            {{ resultado.veredito }}
-        </div>
-
-        <p class="explicacao">
-            {{ resultado.explicacao }}
-        </p>
-
-        <p class="frase">
-            {{ resultado.frase_final }}
-        </p>
+      <p><strong>Veredito educativo:</strong> {{ resultado.veredito }}</p>
+      <p>{{ resultado.explicacao }}</p>
     </div>
     {% endif %}
-</div>
 
-<script>
-function mostrarCampos() {
-    const tipo = document.getElementById("tipo").value;
+  </div>
 
-    document.getElementById("campo-ipca").classList.add("escondido");
-    document.getElementById("campo-cdi").classList.add("escondido");
+  <!-- SCRIPT -->
+  <script>
+    function mostrarExtras() {
+      const tipo = document.getElementById("tipo").value;
 
-    if (tipo === "ipca") {
-        document.getElementById("campo-ipca").classList.remove("escondido");
+      document.getElementById("campo-cdi").style.display = "none";
+      document.getElementById("campo-ipca").style.display = "none";
+
+      if (tipo === "cdb") {
+        document.getElementById("campo-cdi").style.display = "block";
+      }
+
+      if (tipo === "ipca") {
+        document.getElementById("campo-ipca").style.display = "block";
+      }
     }
-
-    if (tipo === "cdb") {
-        document.getElementById("campo-cdi").classList.remove("escondido");
-    }
-}
-
-{% if resultado %}
-document.getElementById("resultado").scrollIntoView({ behavior: "smooth" });
-{% endif %}
-</script>
+  </script>
 
 </body>
 </html>
