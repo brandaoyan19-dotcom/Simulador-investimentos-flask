@@ -1,125 +1,89 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexos Invest</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador de Investimentos</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
-
 <body>
+
   <div class="container">
 
-    <!-- TÍTULO -->
-    <h1>Nexos Invest</h1>
+    <h1>Simulador de Investimentos</h1>
     <p class="subtitle">Simule. Compare. Entenda.</p>
 
-    <!-- FORMULÁRIO -->
     <form method="POST">
 
       <!-- VALOR INICIAL -->
       <label>
         Valor inicial
-        <small>Quanto você pretende investir agora</small>
-        <input type="number" name="valor_inicial" step="0.01" required>
+        <small>Quanto você já tem para investir</small>
+        <input type="number" name="valor_inicial" required>
       </label>
 
       <!-- APORTE MENSAL -->
       <label>
         Aporte mensal
         <small>Quanto você pretende investir todo mês</small>
-        <input type="number" name="aporte_mensal" step="0.01" required>
+        <input type="number" name="aporte_mensal" required>
       </label>
 
-      <!-- PERÍODO -->
-      <label>
-        Período do investimento
-        <small>Por quantos anos você pretende manter o investimento</small>
-        <input type="number" name="anos" required>
-      </label>
-
-      <!-- OBJETIVO -->
+      <!-- OBJETIVO / PRAZO -->
       <label>
         Objetivo do investimento
-        <small>Ajuda a avaliar se esse investimento faz sentido para você</small>
-        <select name="prazo" required>
-          <option value="">Selecione</option>
-          <option value="curto">Curto prazo</option>
-          <option value="medio">Médio prazo</option>
-          <option value="longo">Longo prazo</option>
+        <small>O tempo influencia diretamente no resultado</small>
+        <select name="objetivo" required>
+          <option value="">Selecione o objetivo</option>
+          <option value="curto">Curto prazo — 1 a 2 anos</option>
+          <option value="medio">Médio prazo — 3 a 5 anos</option>
+          <option value="longo">Longo prazo — acima de 5 anos</option>
         </select>
       </label>
 
-      <!-- TIPO DE INVESTIMENTO (POR ÚLTIMO) -->
+      <!-- TIPO DE INVESTIMENTO -->
       <label>
         Tipo de investimento
-        <small>Escolha o tipo de aplicação que deseja simular</small>
-        <select name="tipo" id="tipo" onchange="mostrarExtras()" required>
-          <option value="">Selecione</option>
-          <option value="selic">Tesouro Selic</option>
-          <option value="ipca">Tesouro IPCA+</option>
-          <option value="cdb">CDB</option>
+        <small>Cada opção possui risco e retorno diferentes</small>
+        <select name="tipo_investimento" id="tipoInvestimento" required>
+          <option value="">Selecione o tipo de investimento</option>
+
+          <option value="selic">
+            Tesouro Selic — título público atrelado à taxa básica de juros
+          </option>
+
+          <option value="cdb">
+            CDB — título bancário que rende um percentual do CDI
+          </option>
+
+          <option value="ipca">
+            Tesouro IPCA+ — título público que protege contra a inflação
+          </option>
         </select>
       </label>
 
-      <!-- EXTRA: CDI -->
-      <div class="extra" id="campo-cdi">
+      <!-- CAMPOS CONDICIONAIS -->
+      <div class="extra" id="campoCdi">
         <label>
           Percentual do CDI
-          <small>Indica quanto do CDI esse investimento paga e como isso impacta seu rendimento.</small>
-          <input type="number" name="percentual_cdi" step="0.01" placeholder="Ex: 120">
+          <small>É o percentual que vai fazer seu dinheiro render ao longo do tempo</small>
+          <input type="number" name="percentual_cdi">
         </label>
       </div>
 
-      <!-- EXTRA: IPCA -->
-      <div class="extra" id="campo-ipca">
+      <div class="extra" id="campoIpca">
         <label>
           Adicional acima do IPCA
-          <small>Percentual que o investimento paga além da inflação.</small>
-          <input type="number" name="adicional_ipca" step="0.01" placeholder="Ex: 5">
+          <small>Ganho real acima da inflação</small>
+          <input type="number" name="adicional_ipca">
         </label>
       </div>
 
-      <!-- BOTÃO -->
       <button type="submit">Simular investimento</button>
 
     </form>
 
-    <!-- RESULTADO -->
-    {% if resultado %}
-    <div class="resultado">
-      <h2>Análise do resultado</h2>
-
-      <ul>
-        <li><strong>Total investido:</strong> R$ {{ resultado.total_investido }}</li>
-        <li><strong>Valor final:</strong> R$ {{ resultado.valor_final }}</li>
-        <li><strong>Rendimento:</strong> {{ resultado.percentual }}%</li>
-      </ul>
-
-      <p><strong>Veredito educativo:</strong> {{ resultado.veredito }}</p>
-      <p>{{ resultado.explicacao }}</p>
-    </div>
-    {% endif %}
-
   </div>
-
-  <!-- SCRIPT -->
-  <script>
-    function mostrarExtras() {
-      const tipo = document.getElementById("tipo").value;
-
-      document.getElementById("campo-cdi").style.display = "none";
-      document.getElementById("campo-ipca").style.display = "none";
-
-      if (tipo === "cdb") {
-        document.getElementById("campo-cdi").style.display = "block";
-      }
-
-      if (tipo === "ipca") {
-        document.getElementById("campo-ipca").style.display = "block";
-      }
-    }
-  </script>
 
 </body>
 </html>
