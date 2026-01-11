@@ -13,44 +13,57 @@
     <p class="subtitle">Simule. Compare. Entenda.</p>
 
     <form method="POST">
+
         <div class="campo">
-            <label>Quanto você vai investir agora?</label>
-            <small>Valor inicial que começa a gerar rendimento.</small>
+            <label>Valor inicial</label>
+            <small>É o valor que você começa investindo hoje.</small>
             <input type="number" name="investimento_inicial" required>
         </div>
 
         <div class="campo">
-            <label>Quanto você pretende investir todo mês?</label>
-            <small>Aportes mensais aceleram o crescimento ao longo do tempo.</small>
+            <label>Aporte mensal</label>
+            <small>Quanto você pretende investir todo mês para acelerar o crescimento.</small>
             <input type="number" name="aporte_mensal" required>
         </div>
 
         <div class="campo">
-            <label>Por quanto tempo (anos)?</label>
-            <small>Quanto maior o tempo, maior o efeito dos juros compostos.</small>
+            <label>Prazo do investimento (em anos)</label>
+            <small>O tempo é um dos principais fatores de crescimento do investimento.</small>
             <input type="number" name="anos" required>
         </div>
 
         <div class="campo">
-            <label>Tipo de investimento</label>
-            <small>Escolha de acordo com seu perfil e objetivo.</small>
+            <label>Tipo de aplicação</label>
+            <small>Escolha de acordo com seu objetivo e perfil de risco.</small>
             <select name="tipo" id="tipo" required onchange="mostrarCampos()">
-                <option value="">Selecione</option>
-                <option value="selic">Tesouro Selic – segurança e liquidez</option>
-                <option value="ipca">Tesouro IPCA+ – proteção contra inflação</option>
-                <option value="cdb">CDB – rendimento atrelado ao CDI</option>
+                <option value="">Selecione uma opção</option>
+                <option value="selic">
+                    Tesouro Selic — estabilidade e liquidez
+                </option>
+                <option value="ipca">
+                    Tesouro IPCA+ — proteção contra a inflação
+                </option>
+                <option value="cdb">
+                    CDB — rendimento atrelado ao CDI
+                </option>
             </select>
         </div>
 
+        <!-- Campo condicional IPCA -->
         <div class="campo escondido" id="campo-ipca">
             <label>Adicional acima do IPCA (%)</label>
-            <small>É o ganho real acima da inflação ao longo do tempo.</small>
+            <small>
+                É o ganho real que você recebe além da inflação ao longo do tempo.
+            </small>
             <input type="number" step="0.01" name="ipca_adicional">
         </div>
 
+        <!-- Campo condicional CDI -->
         <div class="campo escondido" id="campo-cdi">
             <label>Percentual do CDI (%)</label>
-            <small>É o percentual que vai fazer seu dinheiro render ao longo do tempo.</small>
+            <small>
+                É o percentual do CDI que vai fazer seu dinheiro render ao longo do tempo.
+            </small>
             <input type="number" step="1" name="cdi_percentual">
         </div>
 
@@ -66,11 +79,17 @@
         <p><strong>Ganho percentual:</strong> {{ resultado.percentual }}</p>
 
         <div class="veredito">
-            <strong>Veredito educativo:</strong> {{ resultado.veredito }}
+            <strong>Veredito educativo:</strong>
+            {{ resultado.veredito }}
         </div>
 
-        <p class="explicacao">{{ resultado.explicacao }}</p>
-        <p class="frase">{{ resultado.frase_final }}</p>
+        <p class="explicacao">
+            {{ resultado.explicacao }}
+        </p>
+
+        <p class="frase">
+            {{ resultado.frase_final }}
+        </p>
     </div>
     {% endif %}
 </div>
@@ -78,12 +97,14 @@
 <script>
 function mostrarCampos() {
     const tipo = document.getElementById("tipo").value;
+
     document.getElementById("campo-ipca").classList.add("escondido");
     document.getElementById("campo-cdi").classList.add("escondido");
 
     if (tipo === "ipca") {
         document.getElementById("campo-ipca").classList.remove("escondido");
     }
+
     if (tipo === "cdb") {
         document.getElementById("campo-cdi").classList.remove("escondido");
     }
