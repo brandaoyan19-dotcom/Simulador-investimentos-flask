@@ -7,49 +7,49 @@ def index():
     resultado = None
 
     if request.method == "POST":
-        investimento_inicial = float(request.form["inicial"])
-        aporte_mensal = float(request.form["aporte"])
+        investimento_inicial = float(request.form["investimento_inicial"])
+        aporte_mensal = float(request.form["aporte_mensal"])
         anos = int(request.form["anos"])
         tipo = request.form["tipo"]
 
         meses = anos * 12
-        total_investido = investimento_inicial + aporte_mensal * meses
+        total_investido = investimento_inicial + (aporte_mensal * meses)
 
-        # Taxas anuais (simulação educacional)
-        selic = 0.1065
+        # Taxas base anuais
+        selic = 0.10
         ipca = 0.045
 
         if tipo == "selic":
             taxa_anual = selic
-            descricao = "Tesouro Selic acompanha a taxa básica de juros da economia."
 
         elif tipo == "ipca":
-            adicional = float(request.form["ipca_extra"]) / 100
+            adicional = float(request.form["ipca_adicional"]) / 100
             taxa_anual = ipca + adicional
-            descricao = "Tesouro IPCA+ protege seu dinheiro da inflação e adiciona ganho real."
 
         elif tipo == "cdb":
             percentual_cdi = float(request.form["cdi_percentual"]) / 100
             taxa_anual = selic * percentual_cdi
-            descricao = "CDB rende com base no CDI, que acompanha a Selic."
 
-        saldo = investimento_inicial
+        taxa_mensal = (1 + taxa_anual) ** (1/12) - 1
+
+        montante = investimento_inicial
         for _ in range(meses):
-            saldo *= (1 + taxa_anual / 12)
-            saldo += aporte_mensal
+            montante = montante * (1 + taxa_mensal) + aporte_mensal
 
-        rendimento = saldo - total_investido
+        rendimento = montante - total_investido
         percentual = (rendimento / total_investido) * 100 if total_investido > 0 else 0
 
-        vale = "Vale a pena" if rendimento > 0 else "Não vale a pena"
+        vale_a_pena = percentual >= 5
 
         resultado = {
-            "saldo": round(saldo, 2),
-            "investido": round(total_investido, 2),
-            "rendimento": round(rendimento, 2),
-            "percentual": round(percentual, 2),
-            "descricao": descricao,
-            "vale": vale
+            "total_investido": f"R$ {total_investido:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."),
+            "montante": f"R$ {montante:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."),
+            "percentual": f"{percentual:.2f}%",
+            "veredito": "É uma boa opção para esse objetivo" if vale_a_pena else "Pode não ser a melhor opção agora",
+            "explicacao": "O investimento superou a inflação e entregou um crescimento consistente."
+            if vale_a_pena else
+            "O rendimento foi baixo para o período e objetivo escolhido.",
+            "frase_final": "Entender o comportamento do investimento ajuda a tomar decisões mais seguras no futuro."
         }
 
     return render_template("index.html", resultado=resultado)

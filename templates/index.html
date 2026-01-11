@@ -1,121 +1,97 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Nexos Invest</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>Nexos Invest</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
 <div class="container">
+    <h1>Nexos Invest</h1>
+    <p class="subtitle">Simule. Compare. Entenda.</p>
 
-  <h1>Nexos Invest</h1>
-  <p class="subtitle">Simule. Compare. Entenda.</p>
+    <form method="POST">
+        <div class="campo">
+            <label>Quanto você vai investir agora?</label>
+            <small>Valor inicial que começa a gerar rendimento.</small>
+            <input type="number" name="investimento_inicial" required>
+        </div>
 
-  <form method="POST">
+        <div class="campo">
+            <label>Quanto você pretende investir todo mês?</label>
+            <small>Aportes mensais aceleram o crescimento ao longo do tempo.</small>
+            <input type="number" name="aporte_mensal" required>
+        </div>
 
-    <!-- INVESTIMENTO INICIAL -->
-    <label>
-      Quanto você vai investir agora?
-      <small>Valor inicial para começar a investir.</small>
-    </label>
-    <input type="number" name="inicial" required>
+        <div class="campo">
+            <label>Por quanto tempo (anos)?</label>
+            <small>Quanto maior o tempo, maior o efeito dos juros compostos.</small>
+            <input type="number" name="anos" required>
+        </div>
 
-    <!-- APORTE MENSAL -->
-    <label>
-      Quanto você pretende investir todo mês?
-      <small>Aportes mensais ajudam o dinheiro crescer com o tempo.</small>
-    </label>
-    <input type="number" name="aporte" required>
+        <div class="campo">
+            <label>Tipo de investimento</label>
+            <small>Escolha de acordo com seu perfil e objetivo.</small>
+            <select name="tipo" id="tipo" required onchange="mostrarCampos()">
+                <option value="">Selecione</option>
+                <option value="selic">Tesouro Selic – segurança e liquidez</option>
+                <option value="ipca">Tesouro IPCA+ – proteção contra inflação</option>
+                <option value="cdb">CDB – rendimento atrelado ao CDI</option>
+            </select>
+        </div>
 
-    <!-- PERÍODO -->
-    <label>
-      Por quantos anos você pretende investir?
-      <small>Quanto maior o prazo, maior o efeito dos juros.</small>
-    </label>
-    <input type="number" name="anos" required>
+        <div class="campo escondido" id="campo-ipca">
+            <label>Adicional acima do IPCA (%)</label>
+            <small>É o ganho real acima da inflação ao longo do tempo.</small>
+            <input type="number" step="0.01" name="ipca_adicional">
+        </div>
 
-    <!-- TIPO DE INVESTIMENTO -->
-    <label>
-      Escolha o tipo de investimento
-      <small>Cada opção tem um objetivo diferente.</small>
-    </label>
-    <select name="tipo" id="tipo" required onchange="mostrarExtras()">
-      <option value="">Selecione</option>
+        <div class="campo escondido" id="campo-cdi">
+            <label>Percentual do CDI (%)</label>
+            <small>É o percentual que vai fazer seu dinheiro render ao longo do tempo.</small>
+            <input type="number" step="1" name="cdi_percentual">
+        </div>
 
-      <option value="selic">
-        Tesouro Selic — acompanha os juros da economia
-      </option>
+        <button type="submit">Simular investimento</button>
+    </form>
 
-      <option value="ipca">
-        Tesouro IPCA+ — protege o dinheiro da inflação
-      </option>
+    {% if resultado %}
+    <div class="resultado" id="resultado">
+        <h2>Análise do resultado</h2>
 
-      <option value="cdb">
-        CDB — rendimento baseado no CDI
-      </option>
-    </select>
+        <p><strong>Total investido:</strong> {{ resultado.total_investido }}</p>
+        <p><strong>Valor final:</strong> {{ resultado.montante }}</p>
+        <p><strong>Ganho percentual:</strong> {{ resultado.percentual }}</p>
 
-    <!-- IPCA EXTRA -->
-    <div id="ipca_extra" class="extra">
-      <label>
-        Qual adicional acima do IPCA? (%)
-        <small>É o ganho extra que você recebe acima da inflação.</small>
-      </label>
-      <input type="number" step="0.01" name="ipca_extra">
+        <div class="veredito">
+            <strong>Veredito educativo:</strong> {{ resultado.veredito }}
+        </div>
+
+        <p class="explicacao">{{ resultado.explicacao }}</p>
+        <p class="frase">{{ resultado.frase_final }}</p>
     </div>
-
-    <!-- CDI EXTRA -->
-    <div id="cdi_extra" class="extra">
-      <label>
-        Qual percentual do CDI?
-        <small>É a porcentagem do CDI que define quanto seu dinheiro rende.</small>
-      </label>
-      <input type="number" step="1" name="cdi_percentual">
-    </div>
-
-    <button type="submit">Simular investimento</button>
-
-  </form>
-
-  {% if resultado %}
-  <div id="resultado" class="resultado">
-    <h2>Resultado da simulação</h2>
-
-    <p>{{ resultado.descricao }}</p>
-
-    <ul>
-      <li><strong>Total investido:</strong> R$ {{ resultado.investido }}</li>
-      <li><strong>Valor final:</strong> R$ {{ resultado.saldo }}</li>
-      <li>
-        <strong>Rendimento:</strong>
-        R$ {{ resultado.rendimento }} ({{ resultado.percentual }}%)
-      </li>
-    </ul>
-
-    <h3>{{ resultado.vale }}</h3>
-  </div>
-  {% endif %}
-
+    {% endif %}
 </div>
 
 <script>
-function mostrarExtras() {
-  const tipo = document.getElementById("tipo").value;
+function mostrarCampos() {
+    const tipo = document.getElementById("tipo").value;
+    document.getElementById("campo-ipca").classList.add("escondido");
+    document.getElementById("campo-cdi").classList.add("escondido");
 
-  document.getElementById("ipca_extra").style.display =
-    tipo === "ipca" ? "block" : "none";
-
-  document.getElementById("cdi_extra").style.display =
-    tipo === "cdb" ? "block" : "none";
+    if (tipo === "ipca") {
+        document.getElementById("campo-ipca").classList.remove("escondido");
+    }
+    if (tipo === "cdb") {
+        document.getElementById("campo-cdi").classList.remove("escondido");
+    }
 }
 
-// Scroll automático até o resultado
-const resultado = document.getElementById("resultado");
-if (resultado) {
-  resultado.scrollIntoView({ behavior: "smooth" });
-}
+{% if resultado %}
+document.getElementById("resultado").scrollIntoView({ behavior: "smooth" });
+{% endif %}
 </script>
 
 </body>
