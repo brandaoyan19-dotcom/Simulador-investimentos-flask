@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Nexos Invest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -14,45 +15,83 @@
 
   <form method="POST">
 
-    <label>Quanto você vai investir agora?</label>
+    <!-- INVESTIMENTO INICIAL -->
+    <label>
+      Quanto você vai investir agora?
+      <small>Valor inicial para começar a investir.</small>
+    </label>
     <input type="number" name="inicial" required>
 
-    <label>Quanto você pretende investir todo mês?</label>
+    <!-- APORTE MENSAL -->
+    <label>
+      Quanto você pretende investir todo mês?
+      <small>Aportes mensais ajudam o dinheiro crescer com o tempo.</small>
+    </label>
     <input type="number" name="aporte" required>
 
-    <label>Por quantos anos você pretende investir?</label>
+    <!-- PERÍODO -->
+    <label>
+      Por quantos anos você pretende investir?
+      <small>Quanto maior o prazo, maior o efeito dos juros.</small>
+    </label>
     <input type="number" name="anos" required>
 
-    <label>Escolha o tipo de investimento</label>
+    <!-- TIPO DE INVESTIMENTO -->
+    <label>
+      Escolha o tipo de investimento
+      <small>Cada opção tem um objetivo diferente.</small>
+    </label>
     <select name="tipo" id="tipo" required onchange="mostrarExtras()">
       <option value="">Selecione</option>
-      <option value="selic">Tesouro Selic – acompanha os juros</option>
-      <option value="ipca">Tesouro IPCA+ – protege da inflação</option>
-      <option value="cdb">CDB – rendimento atrelado ao CDI</option>
+
+      <option value="selic">
+        Tesouro Selic — acompanha os juros da economia
+      </option>
+
+      <option value="ipca">
+        Tesouro IPCA+ — protege o dinheiro da inflação
+      </option>
+
+      <option value="cdb">
+        CDB — rendimento baseado no CDI
+      </option>
     </select>
 
+    <!-- IPCA EXTRA -->
     <div id="ipca_extra" class="extra">
-      <label>Qual adicional acima do IPCA? (%)</label>
+      <label>
+        Qual adicional acima do IPCA? (%)
+        <small>É o ganho extra que você recebe acima da inflação.</small>
+      </label>
       <input type="number" step="0.01" name="ipca_extra">
     </div>
 
+    <!-- CDI EXTRA -->
     <div id="cdi_extra" class="extra">
-      <label>Qual percentual do CDI?</label>
+      <label>
+        Qual percentual do CDI?
+        <small>É a porcentagem do CDI que define quanto seu dinheiro rende.</small>
+      </label>
       <input type="number" step="1" name="cdi_percentual">
     </div>
 
     <button type="submit">Simular investimento</button>
+
   </form>
 
   {% if resultado %}
   <div id="resultado" class="resultado">
     <h2>Resultado da simulação</h2>
+
     <p>{{ resultado.descricao }}</p>
 
     <ul>
       <li><strong>Total investido:</strong> R$ {{ resultado.investido }}</li>
       <li><strong>Valor final:</strong> R$ {{ resultado.saldo }}</li>
-      <li><strong>Rendimento:</strong> R$ {{ resultado.rendimento }} ({{ resultado.percentual }}%)</li>
+      <li>
+        <strong>Rendimento:</strong>
+        R$ {{ resultado.rendimento }} ({{ resultado.percentual }}%)
+      </li>
     </ul>
 
     <h3>{{ resultado.vale }}</h3>
@@ -64,10 +103,15 @@
 <script>
 function mostrarExtras() {
   const tipo = document.getElementById("tipo").value;
-  document.getElementById("ipca_extra").style.display = tipo === "ipca" ? "block" : "none";
-  document.getElementById("cdi_extra").style.display = tipo === "cdb" ? "block" : "none";
+
+  document.getElementById("ipca_extra").style.display =
+    tipo === "ipca" ? "block" : "none";
+
+  document.getElementById("cdi_extra").style.display =
+    tipo === "cdb" ? "block" : "none";
 }
 
+// Scroll automático até o resultado
 const resultado = document.getElementById("resultado");
 if (resultado) {
   resultado.scrollIntoView({ behavior: "smooth" });
