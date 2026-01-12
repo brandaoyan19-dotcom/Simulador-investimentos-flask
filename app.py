@@ -7,33 +7,39 @@ def index():
     resultado = None
 
     if request.method == "POST":
-        investimento_inicial = float(request.form.get("investimento_inicial", 0))
+        investimento_inicial = float(request.form.get("valor_inicial", 0))
         aporte_mensal = float(request.form.get("aporte_mensal", 0))
         anos = int(request.form.get("anos", 0))
-        tipo = request.form.get("tipo")
+        tipo = request.form.get("tipo_investimento")
 
         meses = anos * 12
         total_investido = investimento_inicial + (aporte_mensal * meses)
 
-        # Taxas anuais (simulação educacional)
+        # Taxas base (educacional)
         selic = 0.10
         ipca = 0.045
+
+        taxa_anual = 0
+        descricao = ""
 
         if tipo == "selic":
             taxa_anual = selic
             descricao = "Tesouro Selic acompanha a taxa básica de juros da economia."
 
         elif tipo == "ipca":
-            adicional = float(request.form.get("ipca_adicional", 0)) / 100
+            adicional = float(request.form.get("adicional_ipca", 0)) / 100
             taxa_anual = ipca + adicional
             descricao = "Tesouro IPCA+ protege seu dinheiro da inflação e adiciona ganho real."
 
         elif tipo == "cdb":
-            percentual_cdi = float(request.form.get("cdi_percentual", 0)) / 100
+            percentual_cdi = float(request.form.get("percentual_cdi", 0)) / 100
             taxa_anual = selic * percentual_cdi
             descricao = "CDB rende com base no CDI, que acompanha a Selic."
 
-        saldo = investimento_inicial
+        # Proteção extra (evita crash)
+        if taxa_anual <= 0:
+            return render_template("index.html", resultado=None)
+
         taxa_mensal = (1 + taxa_anual) ** (1/12) - 1
         montante = investimento_inicial
 
