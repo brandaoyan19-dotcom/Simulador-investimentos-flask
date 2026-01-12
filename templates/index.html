@@ -80,6 +80,23 @@
     </form>
 
   </div>
+<script>
+  const tipoInvestimento = document.getElementById("tipoInvestimento");
+  const campoCdi = document.getElementById("campoCdi");
+  const campoIpca = document.getElementById("campoIpca");
 
+  tipoInvestimento.addEventListener("change", () => {
+    campoCdi.style.display = "none";
+    campoIpca.style.display = "none";
+
+    if (tipoInvestimento.value === "cdb") {
+      campoCdi.style.display = "block";
+    }
+
+    if (tipoInvestimento.value === "ipca") {
+      campoIpca.style.display = "block";
+    }
+  });
+</script>
 </body>
 </html>
