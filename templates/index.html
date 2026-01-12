@@ -33,7 +33,7 @@
       <label>
         Quanto tempo pretende investir?
         <small>O tempo é um dos fatores que mais impactam o resultado final</small>
-        <input type="number" name="tempo_anos" min="1" required>
+        <input type="number" name="tempo" min="1" required>
       </label>
 
       <!-- TIPO DE INVESTIMENTO -->
@@ -76,7 +76,22 @@
       </div>
 
       <button type="submit">Simular investimento</button>
+{% if resultado %}
+  <div class="resultado" id="resultado">
+    <h2>Análise do resultado</h2>
 
+    <ul>
+      <li><strong>Total investido:</strong> {{ resultado.total_investido }}</li>
+      <li><strong>Valor final:</strong> {{ resultado.montante }}</li>
+      <li><strong>Rendimento:</strong> {{ resultado.rendimento }}</li>
+      <li><strong>Ganho percentual:</strong> {{ resultado.percentual }}</li>
+    </ul>
+
+    <p><strong>Veredito educativo:</strong> {{ resultado.veredito }}</p>
+    <p>{{ resultado.explicacao }}</p>
+    <p><em>{{ resultado.frase_final }}</em></p>
+  </div>
+{% endif %}
     </form>
 
   </div>
