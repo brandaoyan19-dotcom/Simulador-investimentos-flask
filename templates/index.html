@@ -113,5 +113,12 @@
     }
   });
 </script>
+  {% if resultado %}
+<script>
+  document.getElementById("resultado").scrollIntoView({
+    behavior: "smooth"
+  });
+</script>
+{% endif %}
 </body>
 </html>
