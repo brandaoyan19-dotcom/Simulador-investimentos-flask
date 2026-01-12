@@ -9,15 +9,15 @@ def index():
     if request.method == "POST":
         investimento_inicial = float(request.form.get("valor_inicial", 0))
         aporte_mensal = float(request.form.get("aporte_mensal", 0))
-        anos = int(request.form.get("anos", 0))
+        anos = int(request.form.get("tempo", 0))
         tipo = request.form.get("tipo_investimento")
 
         meses = anos * 12
         total_investido = investimento_inicial + (aporte_mensal * meses)
 
         # Taxas base (educacional)
-        selic = 0.10
-        ipca = 0.045
+        selic = 0.15
+        ipca = 0.059
 
         taxa_anual = 0
         descricao = ""
