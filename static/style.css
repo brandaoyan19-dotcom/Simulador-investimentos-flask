@@ -167,3 +167,9 @@ button:hover {
   margin: 0 auto 12px auto;
   max-width: 140px;
 }
+.logo {
+  display: block;
+  margin: 0 auto 12px;
+  height: 36px;
+  width: auto;
+}
