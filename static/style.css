@@ -164,12 +164,8 @@ button:hover {
 
 .logo {
   display: block;
+  width: 160px;
+  max-width: 70%;
+  height: auto;
   margin: 0 auto 12px auto;
-  max-width: 140px;
-}
-.logo {
-  display: block;
-  margin: 0 auto 12px;
-  height: 36px;
-  width: auto;
 }
