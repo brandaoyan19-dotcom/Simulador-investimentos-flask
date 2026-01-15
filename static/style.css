@@ -161,11 +161,12 @@ button:hover {
   color: #9aa0a6;
   margin-bottom: 24px;
 }
-
 .logo {
   display: block;
   width: 160px;
-  max-width: 70%;
   height: auto;
   margin: 0 auto 12px auto;
+
+  background: white;
+  padding: 8px;
 }
